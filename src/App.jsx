@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -15,14 +15,17 @@ import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } fro
 function App() {
   const [count, setCount] = useState(0)
 
+ 
+
   return (
     <>
       <div className="h-screen w-screen flex flex-col text-start items-start">
+
         <div className='h-9'>
           <NavBar />
         </div>
+
         <div className="flex-grow pt-5">
-          {/* <RouterProvider router={router} /> */}
           <Routes>
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/Dashboard" element={<Dashboard />} />
