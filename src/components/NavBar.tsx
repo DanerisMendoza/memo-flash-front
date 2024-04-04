@@ -25,7 +25,7 @@ export default function ResponsiveAppBar() {
 
   const location = useLocation()
   useEffect(() => {
-    console.log("Route changed to:", location.pathname)
+    // console.log("Route changed to:", location.pathname)
   }, [location])
 
   const handleOpenNavMenu = (event) => {
@@ -59,60 +59,61 @@ export default function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  // console.log(location.pathname.substring(1));
+  // console.log(pages)
+  // console.log(pages.includes(location.pathname))
+
   return (
     <React.Fragment>
       <AppBar >
         <Toolbar >
           <AdbIcon />
-
-          {location.pathname !== '/' && (
-            <Box sx={{ flexGrow: 1, display: 'flex' }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => SwitchPage(page)}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
-          )}
-
-          {location.pathname !== '/' && (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => HandleSettings(setting)}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
+          {pages.includes(location.pathname.substring(1)) ? (
+            // logged in
+            <>
+              <Box sx={{ flexGrow: 1, display: 'flex' }}>
+                {pages.map((page) => (
+                  <Button
+                    key={page}
+                    onClick={() => SwitchPage(page)}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    {page}
+                  </Button>
                 ))}
-              </Menu>
-            </Box>
-          )}
-
-
-          {location.pathname == '/' && (
+              </Box>
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={() => HandleSettings(setting)}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </>
+          ) : (
+            // not logged in
             <Box className='w-screen flex flex-row justify-end'>
               <Button
                 onClick={() => Login()}
@@ -130,9 +131,13 @@ export default function ResponsiveAppBar() {
           )}
 
 
+
+    
+
+
         </Toolbar>
-      </AppBar>
-    </React.Fragment>
+      </AppBar >
+    </React.Fragment >
   );
 }
 

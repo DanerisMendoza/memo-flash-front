@@ -19,6 +19,7 @@ export default function HomePage() {
 
     return <div>
         <React.Fragment>
+            <div>Landing Page</div>
             <Dialog
                 open={open}
                 onClose={handleClose}
