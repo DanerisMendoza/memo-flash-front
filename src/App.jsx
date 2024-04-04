@@ -1,6 +1,3 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import NavBar from './components/NavBar'
 import HomePage from './pages/HomePage'
@@ -10,21 +7,15 @@ import Orders from './pages/Orders'
 import Inventory from './pages/Inventory'
 import Dashboard from './pages/Dashboard'
 import Users from './pages/Users'
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom'
+import {  Routes, Route} from 'react-router-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
-
- 
-
   return (
     <>
       <div className="h-screen w-screen flex flex-col text-start items-start">
-
         <div className='h-9'>
           <NavBar />
         </div>
-
         <div className="flex-grow pt-5">
           <Routes>
             <Route exact path="/" element={<HomePage />} />
