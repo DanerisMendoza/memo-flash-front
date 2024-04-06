@@ -12,6 +12,8 @@ import type { RootState } from '../store/store'
 
 import TextField from '@mui/material/TextField';
 import Swal from 'sweetalert2';
+import axiosInstance from '../axiosConfig';
+import zIndex from '@mui/material/styles/zIndex';
 
 export default function HomePage() {
     const dispatch = useDispatch()
@@ -53,18 +55,33 @@ export default function HomePage() {
         return validationErrors
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-
         if (Object.keys(handleErrorChange()).length === 0) {
-            setTimeout(() => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Registration successful!',
-                });
-            }, 1000);
-            handleClose();
+            const payload = {
+                username: formData.username,
+                password: formData.password
+            }
+            await axiosInstance.post('/api/users', payload).then((response) => {
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Registration successful!',
+                    });
+                }, 1000);
+                handleClose();
+            }).catch((error) => {
+                if (error.response.status === 400) {
+                    const message = error.response.data.message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registration failed',
+                        text: message,
+                    });
+                    return
+                }
+            });;
         }
     }
 
@@ -81,6 +98,7 @@ export default function HomePage() {
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                style={{zIndex:'0'}}
             >
                 <DialogTitle id="alert-dialog-title">
                     <div className='text-center'>
