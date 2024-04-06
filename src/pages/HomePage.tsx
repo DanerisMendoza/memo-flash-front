@@ -31,12 +31,13 @@ export default function HomePage() {
         setFormData({
             ...formData, [name]: value
         })
+        handleErrorChange()
     }
+
 
     const registerDialog = useSelector((state: RootState) => state.registerDialog.value)
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleErrorChange = () => {
         const validationErrors: any = {}
         if (!formData.username.trim()) {
             validationErrors.username = "username is required"
@@ -49,8 +50,13 @@ export default function HomePage() {
         }
 
         setErrors(validationErrors)
+        return validationErrors
+    }
 
-        if (Object.keys(validationErrors).length === 0) {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if (Object.keys(handleErrorChange()).length === 0) {
             setTimeout(() => {
                 Swal.fire({
                     icon: 'success',
