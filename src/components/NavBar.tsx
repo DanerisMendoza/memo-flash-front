@@ -15,6 +15,11 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { decrement, increment, incrementByAmount } from '../features/counter/counterSlice'
+import { set_register_dialog } from '../features/user/registerDialogSlice'
+import type { RootState } from '../store/store'
+
 const pages = ['Dashboard', 'Inventory', 'Orders', 'Users'];
 const settings = ['logout'];
 
@@ -22,6 +27,10 @@ export default function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
+
+  const count = useSelector((state: RootState) => state.counter.value)
+  const dispatch = useDispatch()
+  const registerDialog = useSelector((state: RootState) => state.registerDialog.value)
 
   const location = useLocation()
   useEffect(() => {
@@ -40,9 +49,11 @@ export default function ResponsiveAppBar() {
   };
   const Login = () => {
     // navigate('/Dashboard');
+    dispatch(increment())
   };
   const Register = () => {
     // navigate('');
+    dispatch(set_register_dialog(true))
   };
 
   const HandleSettings = (item: string) => {
@@ -59,16 +70,16 @@ export default function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  // console.log(location.pathname.substring(1));
-  // console.log(pages)
-  // console.log(pages.includes(location.pathname))
+  // console.log(registerDialog)
+  const pathname = location.pathname.substring(1);
+  const capitalizedPathname = pathname.substring(0, 1).toUpperCase() + pathname.substring(1);
 
   return (
     <React.Fragment>
       <AppBar >
         <Toolbar >
           <AdbIcon />
-          {pages.includes(location.pathname.substring(1)) ? (
+          {pages.includes(capitalizedPathname) ? (
             // logged in
             <>
               <Box sx={{ flexGrow: 1, display: 'flex' }}>
@@ -132,7 +143,7 @@ export default function ResponsiveAppBar() {
 
 
 
-    
+
 
 
         </Toolbar>
