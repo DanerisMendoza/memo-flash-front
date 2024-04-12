@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from '../features/counter/counterSlice'
-import registerDialogReducer from '../features/user/registerDialogSlice'
+import { registerDialogReducer, loginDialogReducer } from '../features/user/dialog' // Import as named import
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     registerDialog : registerDialogReducer,
+    LoginDialog : loginDialogReducer,
   },
 })
 

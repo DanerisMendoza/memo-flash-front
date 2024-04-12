@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 
 import { useSelector, useDispatch } from "react-redux";
-import { set_register_dialog } from "../features/user/registerDialogSlice";
+import { set_register_dialog, set_login_dialog } from "../features/user/dialog";
 import type { RootState } from "../store/store";
 
 import TextField from "@mui/material/TextField";
@@ -39,6 +39,9 @@ export default function HomePage() {
 
   const registerDialog = useSelector(
     (state: RootState) => state.registerDialog.value
+  );
+  const LoginDialogState = useSelector(
+    (state: RootState) => state.LoginDialog.value
   );
 
   const handleErrorChange = () => {
@@ -74,7 +77,7 @@ export default function HomePage() {
               text: "Registration successful!",
             });
           }, 1000);
-          handleClose();
+          RegisterClose();
         })
         .catch((error) => {
           if (error.response.status === 400) {
@@ -90,9 +93,13 @@ export default function HomePage() {
     }
   };
 
-  const handleClose = () => {
+  const RegisterClose = () => {
     setFormData({ username: "", password: "" });
     dispatch(set_register_dialog(false));
+  };
+
+  const LoginClose = () => {
+    dispatch(set_login_dialog(false));
   };
 
   return (
@@ -120,7 +127,7 @@ export default function HomePage() {
         </div>
         <Dialog
           open={registerDialog}
-          onClose={handleClose}
+          onClose={RegisterClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
           style={{ zIndex: "0" }}
@@ -151,7 +158,49 @@ export default function HomePage() {
           </DialogContent>
           <DialogActions>
             <div className="w-full flex flex-row justify-center gap-2 pb-4">
-              <Button variant="contained" onClick={handleClose}>
+              <Button variant="contained" onClick={RegisterClose}>
+                Cancel
+              </Button>
+              <Button variant="contained" onClick={handleSubmit} autoFocus>
+                Submit
+              </Button>
+            </div>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={LoginDialogState}
+          onClose={LoginClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          style={{ zIndex: "0" }}
+        >
+          <DialogTitle id="alert-dialog-title">
+            <div className="text-center">{"Login"}</div>
+          </DialogTitle>
+          <DialogContent>
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-2 p-2">
+                <TextField
+                  label="Username"
+                  variant="outlined"
+                  name="username"
+                  error={!!errors.username}
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Password"
+                  variant="outlined"
+                  name="password"
+                  error={!!errors.password}
+                  type="password"
+                  onChange={handleChange}
+                />
+              </div>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <div className="w-full flex flex-row justify-center gap-2 pb-4">
+              <Button variant="contained" onClick={LoginClose}>
                 Cancel
               </Button>
               <Button variant="contained" onClick={handleSubmit} autoFocus>
