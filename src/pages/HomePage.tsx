@@ -66,6 +66,7 @@ export default function HomePage() {
       const payload = {
         username: formData.username,
         password: formData.password,
+        role: [1]
       };
       await axiosInstance
         .post("/api/users", payload)
@@ -85,6 +86,41 @@ export default function HomePage() {
             Swal.fire({
               icon: "error",
               title: "Registration failed",
+              text: message,
+            });
+            return;
+          }
+        });
+    }
+  };
+  const login = async (e) => {
+    e.preventDefault();
+    if (Object.keys(handleErrorChange()).length === 0) {
+      const payload = {
+        username: formData.username,
+        password: formData.password,
+      };
+      await axiosInstance
+        .post("/api/login", payload)
+        .then((response) => {
+          localStorage.setItem("mff", response.data.token);
+          if (response.status === 200) {
+            setTimeout(() => {
+              Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Login successfully!",
+              });
+            }, 1000)
+            LoginClose()
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400) {
+            const message = error.response.data.message;
+            Swal.fire({
+              icon: "error",
+              title: "Invalid Username or Password!",
               text: message,
             });
             return;
@@ -153,6 +189,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+        {/* register dialog */}
         <Dialog
           open={registerDialog}
           onClose={RegisterClose}
@@ -164,7 +201,7 @@ export default function HomePage() {
             <div className="text-center">{"User Registration"}</div>
           </DialogTitle>
           <DialogContent>
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="flex flex-col gap-2 p-2">
                 <TextField
                   label="Username"
@@ -195,6 +232,7 @@ export default function HomePage() {
             </div>
           </DialogActions>
         </Dialog>
+        {/* login dialog */}
         <Dialog
           open={LoginDialogState}
           onClose={LoginClose}
@@ -206,7 +244,7 @@ export default function HomePage() {
             <div className="text-center">{"Login"}</div>
           </DialogTitle>
           <DialogContent>
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="flex flex-col gap-2 p-2">
                 <TextField
                   label="Username"
@@ -231,7 +269,7 @@ export default function HomePage() {
               <Button variant="contained" onClick={LoginClose}>
                 Cancel
               </Button>
-              <Button variant="contained" onClick={handleSubmit} autoFocus>
+              <Button variant="contained" onClick={login} autoFocus>
                 Submit
               </Button>
             </div>
