@@ -20,7 +20,7 @@ import { decrement, increment, incrementByAmount } from '../features/counter/cou
 import { set_register_dialog, set_login_dialog } from '../features/user/dialog'
 import type { RootState } from '../store/store'
 
-const pages = ['Dashboard', 'Inventory', 'Orders', 'Users'];
+const pages = ['Deck', 'Profile', 'Users'];
 const settings = ['logout'];
 
 export default function ResponsiveAppBar() {

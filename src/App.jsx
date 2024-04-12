@@ -3,8 +3,7 @@ import NavBar from './components/NavBar'
 import HomePage from './pages/HomePage'
 import NotFoundPage from './pages/NotFoundPage'
 import Profile from './pages/Profile'
-import Orders from './pages/Orders'
-import Inventory from './pages/Inventory'
+import Deck from './pages/Deck'
 import Dashboard from './pages/Dashboard'
 import Users from './pages/Users'
 import {  Routes, Route} from 'react-router-dom'
@@ -22,8 +21,7 @@ function App() {
             <Route exact path="/Dashboard" element={<Dashboard />} />
             <Route exact path="/Users" element={<Users />} />
             <Route exact path="/Profile" element={<Profile />} />
-            <Route exact path="/Orders" element={<Orders />} />
-            <Route exact path="/Inventory" element={<Inventory />} />
+            <Route exact path="/Deck" element={<Deck />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
