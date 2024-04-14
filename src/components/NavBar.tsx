@@ -38,6 +38,21 @@ export default function ResponsiveAppBar() {
     (state: RootState) => state.userDetails
   );
 
+  const location = useLocation()
+
+
+  const [current_path, set_current_path] = useState<any>({});
+
+  useEffect(() => {
+    let newPathname = location.pathname.substring(1);
+    set_current_path(newPathname)
+  }, [location])
+
+  useEffect(() => {
+    console.log(current_path)
+  }, [current_path])
+
+
   useEffect(() => {
     getUserDetails()(dispatch).then(response => {
 
@@ -47,7 +62,6 @@ export default function ResponsiveAppBar() {
   useEffect(() => {
     if (userDetails.role.length > 0) {
       const firstName = userDetails.name.split(' ')[0];
-      console.log(firstName);
       const role = roles.find((r) => r.id === userDetails.role[0]);
       if (role) {
         navigate(role.pages[0]);
@@ -103,7 +117,7 @@ export default function ResponsiveAppBar() {
                       <Button
                         key={`${roleId}-${idx}`}
                         onClick={() => SwitchPage(page)}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                        sx={page == current_path ? { color: 'white', background: 'rgba(255, 255, 255, 0.3)', borderRadius: '0.5rem' } : {color: 'white', }}
                       >
                         {page}
                       </Button>
