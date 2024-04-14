@@ -22,12 +22,12 @@ export const userDetailsSlice = createSlice({
     reducers: {
         set_user_details: (state, action: PayloadAction<any>) => {
             state.username = action.payload.username;
-            // state.name = action.payload.name;
+            state.name = action.payload.name;
             state.role = action.payload.role;
         },
         clear_user_details: (state) => {
             state.username = '';
-            // state.name = '';
+            state.name = '';
             state.role = [];
         },
     },
@@ -37,9 +37,7 @@ export const userDetailsSlice = createSlice({
 export const getUserDetails = () => async (dispatch: any) => {
     try {
         const response = await axiosInstance.get("/api/getUserByToken");
-        // console.log(response.data)
         dispatch(set_user_details(response.data)); // Assuming response.data has { username, name, role }
-        // dispatch(set_user_details({username:'aaa',name:'zxc',role:[1]})); // Assuming response.data has { username, name, role }
     } catch (error) {
         // Handle error if needed
         console.error("Error fetching user details:", error);
