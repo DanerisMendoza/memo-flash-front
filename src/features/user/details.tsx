@@ -2,23 +2,25 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from '../../api.js';
 // ts
-export interface UserDialogState {
+export interface UserDetailsState {
     username: String,
     name: String,
     role: number[]; //0=> admin, 1=>enduser
 }
 
+
 // state
-const initialState: UserDialogState = {
+const initialUserDetailsState: UserDetailsState = {
     username: '',
     name: '',
     role: [],
 };
 
+
 // slice
 export const userDetailsSlice = createSlice({
-    name: "dialog",
-    initialState,
+    name: "userDetails",
+    initialState: initialUserDetailsState,
     reducers: {
         set_user_details: (state, action: PayloadAction<any>) => {
             state.username = action.payload.username;
@@ -45,6 +47,6 @@ export const getUserDetails = () => async (dispatch: any) => {
 };
 
 
-export const { set_user_details,clear_user_details } = userDetailsSlice.actions;
+export const { set_user_details, clear_user_details } = userDetailsSlice.actions;
 
 export const userDetailsReducer = userDetailsSlice.reducer;

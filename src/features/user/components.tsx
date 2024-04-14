@@ -11,7 +11,7 @@ export interface LoginDialogState {
 }
 
 // state
-const initialState: RegisterDialogState = {
+const initialRegisterState: RegisterDialogState = {
   value: false,
 };
 
@@ -20,8 +20,8 @@ const initialLoginState: LoginDialogState = {
 };
 // slice
 export const registerDialogSlice = createSlice({
-  name: "dialog",
-  initialState,
+  name: "registerDialog",
+  initialState: initialRegisterState,
   reducers: {
     set_register_dialog: (state, action: PayloadAction<any>) => {
       state.value = action.payload;
