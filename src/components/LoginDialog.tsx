@@ -47,13 +47,6 @@ export default function LoginDialog() {
                     localStorage.setItem("mff-token", response.data.token);
                     if (response.status === 200) {
                         getUserDetails()(dispatch)
-                        setTimeout(() => {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Success!",
-                                text: "Login successfully!",
-                            });
-                        }, 1000)
                         LoginClose()
                     }
                 })
