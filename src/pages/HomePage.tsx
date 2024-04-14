@@ -4,12 +4,6 @@ import RegisterDialog from '../components/RegisterDialog';
 
 export default function HomePage() {
 
-  interface FormData {
-    name: string;
-    username: string;
-    password: string;
-  }
-
   const topics = [
     "Education",
     "Learning Tools",
@@ -49,10 +43,9 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex flex-row flex-wrap gap-1">
-            {/* Use Array.map to generate multiple instances of the inner div */}
             {topics.map((topic, index) => (
               <div
-                key={index} // Ensure each instance has a unique key
+                key={index} 
                 style={{ width: "10rem", height: "5rem" }}
                 className="enlarge grow flex items-center justify-center bg-white text-center shadow-xl rounded-lg p-2"
               >
