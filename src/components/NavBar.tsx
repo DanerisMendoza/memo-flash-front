@@ -16,112 +16,122 @@ import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment, incrementByAmount } from '../features/counter/counterSlice'
-import { set_register_dialog, set_login_dialog } from '../features/user/dialog'
+import { set_register_dialog, set_login_dialog } from '../features/user/components'
+import { set_user_details, clear_user_details, getUserDetails } from '../features/user/details'
+
 import type { RootState } from '../store/store'
 
-const pages = ['Deck', 'Profile', 'Users'];
+const roles = [
+  { id: 0, pages: ['Users'] },
+  { id: 1, pages: ['Deck', 'Profile'] }
+];
+
 const settings = ['logout'];
 
 export default function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
   const navigate = useNavigate();
 
-  const count = useSelector((state: RootState) => state.counter.value)
   const dispatch = useDispatch()
-  const registerDialog = useSelector((state: RootState) => state.registerDialog.value)
 
-  const location = useLocation()
+  const userDetails = useSelector(
+    (state: RootState) => state.userDetails
+  );
+
   useEffect(() => {
-    // console.log("Route changed to:", location.pathname)
-  }, [location])
+    getUserDetails()(dispatch).then(response => {
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+    });
+  }, []); // Empty dependency array means this effect runs only once after the initial render
+
+  useEffect(() => {
+    if (userDetails.role.length > 0) {
+      // console.log(roles)
+      const role = roles.find((r) => r.id === userDetails.role[0]);
+      if (role) {
+        navigate(role.pages[0]);
+      }
+    }
+    else {
+      navigate('')
+    }
+  }, [userDetails]); // Trigger this effect whenever userDetails changes
+
 
   const SwitchPage = (item: string) => {
     navigate(`/${item}`);
   };
   const Login = () => {
-    // navigate('/Dashboard');
     dispatch(set_login_dialog(true))
   };
   const Register = () => {
-    // navigate('');
     dispatch(set_register_dialog(true))
   };
 
   const HandleSettings = (item: string) => {
     if (item === 'logout') {
+      dispatch(clear_user_details())
       navigate('');
+      localStorage.removeItem("mff-token");
     }
+    setAnchorEl(null);
   }
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
-
-  // console.log(registerDialog)
-  const pathname = location.pathname.substring(1);
-  const capitalizedPathname = pathname.substring(0, 1).toUpperCase() + pathname.substring(1);
 
   return (
     <React.Fragment>
       <AppBar >
         <Toolbar >
           <AdbIcon />
-          {pages.includes(capitalizedPathname) ? (
+          {userDetails.role.length > 0 ? (
             // logged in
             <>
               <Box sx={{ flexGrow: 1, display: 'flex' }}>
-                {pages.map((page) => (
-                  <Button
-                    key={page}
-                    onClick={() => SwitchPage(page)}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                  >
-                    {page}
-                  </Button>
-                ))}
+                {userDetails.role.map((roleId) => {
+                  const role = roles.find((r) => r.id === roleId);
+                  if (role) {
+                    return role.pages.map((page, idx) => (
+                      <Button
+                        key={`${roleId}-${idx}`}
+                        onClick={() => SwitchPage(page)}
+                        sx={{ my: 2, color: 'white', display: 'block' }}
+                      >
+                        {page}
+                      </Button>
+                    ));
+                  }
+                  return null;
+                })}
               </Box>
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={() => HandleSettings(setting)}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
+
+              <IconButton
+                id="basic-button"
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+              >
+                <MenuItem onClick={() => HandleSettings('logout')}>Logout</MenuItem>
+              </Menu>
+
             </>
           ) : (
             // not logged in
@@ -140,12 +150,6 @@ export default function ResponsiveAppBar() {
               </Button>
             </Box>
           )}
-
-
-
-
-
-
         </Toolbar>
       </AppBar >
     </React.Fragment >

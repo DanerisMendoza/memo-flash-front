@@ -7,13 +7,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 
 import { useSelector, useDispatch } from "react-redux";
-import { set_register_dialog, set_login_dialog } from "../features/user/dialog";
+import { set_register_dialog, set_login_dialog } from "../features/user/components.js";
+import { set_user_details, getUserDetails } from '../features/user/details'
 import type { RootState } from "../store/store";
 
 import TextField from "@mui/material/TextField";
 import Swal from "sweetalert2";
-import axiosInstance from "../axiosConfig";
-import zIndex from "@mui/material/styles/zIndex";
+import axiosInstance from '../api.js';
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -27,8 +28,9 @@ export default function HomePage() {
     password: "",
   });
   const [errors, setErrors] = useState<any>({});
-
-  const handleChange = (e) => {
+  const navigate = useNavigate();
+  
+  const handleFieldChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -43,6 +45,7 @@ export default function HomePage() {
   const LoginDialogState = useSelector(
     (state: RootState) => state.LoginDialog.value
   );
+ 
 
   const handleErrorChange = () => {
     const validationErrors: any = {};
@@ -103,8 +106,9 @@ export default function HomePage() {
       await axiosInstance
         .post("/api/login", payload)
         .then((response) => {
-          localStorage.setItem("mff", response.data.token);
+          localStorage.setItem("mff-token", response.data.token);
           if (response.status === 200) {
+            getUserDetails()(dispatch)
             setTimeout(() => {
               Swal.fire({
                 icon: "success",
@@ -208,7 +212,7 @@ export default function HomePage() {
                   variant="outlined"
                   name="username"
                   error={!!errors.username}
-                  onChange={handleChange}
+                  onChange={handleFieldChange}
                 />
                 <TextField
                   label="Password"
@@ -216,7 +220,7 @@ export default function HomePage() {
                   name="password"
                   error={!!errors.password}
                   type="password"
-                  onChange={handleChange}
+                  onChange={handleFieldChange}
                 />
               </div>
             </form>
@@ -251,7 +255,7 @@ export default function HomePage() {
                   variant="outlined"
                   name="username"
                   error={!!errors.username}
-                  onChange={handleChange}
+                  onChange={handleFieldChange}
                 />
                 <TextField
                   label="Password"
@@ -259,7 +263,7 @@ export default function HomePage() {
                   name="password"
                   error={!!errors.password}
                   type="password"
-                  onChange={handleChange}
+                  onChange={handleFieldChange}
                 />
               </div>
             </form>

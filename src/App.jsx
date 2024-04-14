@@ -4,7 +4,6 @@ import HomePage from './pages/HomePage'
 import NotFoundPage from './pages/NotFoundPage'
 import Profile from './pages/Profile'
 import Deck from './pages/Deck'
-import Dashboard from './pages/Dashboard'
 import Users from './pages/Users'
 import {  Routes, Route} from 'react-router-dom'
 
@@ -18,7 +17,6 @@ function App() {
         <div className="flex-grow pt-5">
           <Routes>
             <Route exact path="/" element={<HomePage />} />
-            <Route exact path="/Dashboard" element={<Dashboard />} />
             <Route exact path="/Users" element={<Users />} />
             <Route exact path="/Profile" element={<Profile />} />
             <Route exact path="/Deck" element={<Deck />} />
