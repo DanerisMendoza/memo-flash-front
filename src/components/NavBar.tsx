@@ -49,7 +49,7 @@ export default function ResponsiveAppBar() {
   }, [location])
 
   useEffect(() => {
-    console.log(current_path)
+    // console.log(current_path)
   }, [current_path])
 
 

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from '../features/counter/counterSlice'
 import { registerDialogReducer, loginDialogReducer } from '../features/user/components' 
-import { userDetailsReducer } from '../features/user/details'
+import { userDetailsReducer,usersReducer } from '../features/user/details'
 
 export const store = configureStore({
   reducer: {
@@ -9,6 +9,7 @@ export const store = configureStore({
     registerDialog : registerDialogReducer,
     LoginDialog : loginDialogReducer,
     userDetails : userDetailsReducer,
+    users : usersReducer,
   },
 })
 
