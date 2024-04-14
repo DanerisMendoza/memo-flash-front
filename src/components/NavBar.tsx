@@ -46,7 +46,8 @@ export default function ResponsiveAppBar() {
 
   useEffect(() => {
     if (userDetails.role.length > 0) {
-      console.log(userDetails)
+      const firstName = userDetails.name.split(' ')[0];
+      console.log(firstName);
       const role = roles.find((r) => r.id === userDetails.role[0]);
       if (role) {
         navigate(role.pages[0]);
@@ -117,8 +118,13 @@ export default function ResponsiveAppBar() {
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}>
-                <Avatar alt="Remy Sharp" src="/images/avatar.png" className='bg-white '/>
+                onClick={handleClick}
+                style={{ color: 'white' }}
+              >
+                <p className='p-2'>
+                  {userDetails.name.split(' ')[0]}
+                </p>
+                <Avatar alt="Remy Sharp" src="/images/avatar.png" className='bg-white ' />
               </IconButton>
               <Menu
                 id="basic-menu"
