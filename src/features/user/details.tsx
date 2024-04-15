@@ -85,6 +85,18 @@ export const getUsers = () => async (dispatch: any) => {
     }
 };
 
+export const deleteUser = (item) => async (dispatch: any) => {
+    try {
+        await axiosInstance.delete(`/api/users/${item._id}`).then((response)=>{
+            console.log(response)
+            dispatch(getUsers());
+        });
+    } catch (error) {
+        // Handle error if needed
+        console.error("Error fetching user details:", error);
+    }
+};
+
 
 export const { set_user_details, clear_user_details } = userDetailsSlice.actions;
 export const { set_users } = usersSlice.actions;
