@@ -12,31 +12,29 @@ export default function Users() {
     const userDetails = useSelector(
         (state: RootState) => state.userDetails
     );
+    
     const users = useSelector(
         (state: RootState) => state.users
     );
-    useEffect(() => {
-        getUserDetails()(dispatch)
-    }, []);
+
     useEffect(() => {
         getUsers()(dispatch)
     }, []);
 
-    useEffect(() => {
-        // console.log(userDetails)
-    }, [userDetails]);
+  
 
     useEffect(() => {
-        console.log(users)
+        // console.log(users)
     }, [users]);
 
     const handleButtonClick = (mode: String, item: any) => {
-        if(mode === 'delete'){
+        if (mode === 'delete') {
             deleteUser(item)(dispatch)
         }
     }
 
     const columns: GridColDef[] = [
+        { field: '_id', headerName: 'id', flex: 1, align: 'center', headerAlign: 'center', },
         { field: 'name', headerName: 'name', flex: 1, align: 'center', headerAlign: 'center', },
         { field: 'username', headerName: 'username', flex: 1, align: 'center', headerAlign: 'center', },
         {

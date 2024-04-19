@@ -4,7 +4,9 @@ import NotFoundPage from './pages/NotFoundPage'
 import Profile from './pages/Profile'
 import Deck from './pages/Deck'
 import Users from './pages/Users'
-import {  Routes, Route} from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
+import PrivateRoutes from './utils/PrivateRoutes'
+import PublicRoutes from './utils/PublicRoutes'
 
 function App() {
   return (
@@ -15,10 +17,14 @@ function App() {
         </div>
         <div className="flex-grow pt-5">
           <Routes>
-            <Route exact path="/" element={<HomePage />} />
-            <Route exact path="/Users" element={<Users />} />
-            <Route exact path="/Profile" element={<Profile />} />
-            <Route exact path="/Deck" element={<Deck />} />
+            <Route element={<PublicRoutes />}>
+              <Route path="/" element={<HomePage />} />
+            </Route>
+            <Route element={<PrivateRoutes />}>
+              <Route path="/Users" element={<Users />} />
+              <Route path="/Profile" element={<Profile />} />
+              <Route path="/Deck" element={<Deck />} />
+            </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

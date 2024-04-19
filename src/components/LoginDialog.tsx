@@ -13,9 +13,11 @@ import { set_register_dialog, set_login_dialog } from "../features/user/componen
 import { set_user_details, getUserDetails } from '../features/user/details'
 import axiosInstance from '../api.js';
 import Swal from "sweetalert2";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function LoginDialog() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const LoginDialogState = useSelector(
         (state: RootState) => state.LoginDialog.value
     );
@@ -29,6 +31,10 @@ export default function LoginDialog() {
         username: "",
         password: "",
     });
+    const roles = [
+        { role: 0, pages: ['Users'] },
+        { role: 1, pages: ['Deck', 'Profile'] }
+    ];
     const [errors, setErrors] = useState<any>({});
     const LoginClose = () => {
         dispatch(set_login_dialog(false));
@@ -46,7 +52,19 @@ export default function LoginDialog() {
                 .then((response) => {
                     localStorage.setItem("mff-token", response.data.token);
                     if (response.status === 200) {
-                        getUserDetails()(dispatch)
+                        getUserDetails(dispatch).then((response: any) => {
+                            const access: string[] = [];
+                            response.data.role.forEach(item => {
+                                const role = roles.find((r) => r.role === item);
+                                role?.pages.forEach(element => {
+                                    access.push(element)
+                                });
+                            })
+                            const default_access = roles.find((r) => r.role === response.data.role[0])?.pages[0]
+                            navigate(`${default_access}`);
+                        }).catch((error: any) => { 
+                            navigate("/");
+                        })
                         LoginClose()
                     }
                 })
