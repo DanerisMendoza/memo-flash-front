@@ -9,6 +9,7 @@ import axiosInstance from '../../api.js';
 export interface UserDetailsState {
     id: String,
     username: String,
+    email: String,
     name: String,
     role: number[], //0=> admin, 1=>enduser
     profile_pic_path: String,
@@ -19,6 +20,7 @@ export interface UserDetailsState {
 const initialUserDetailsState: UserDetailsState = {
     id: '',
     username: '',
+    email: '',
     name: '',
     role: [],
     profile_pic_path: '',
@@ -37,6 +39,7 @@ export const userDetailsSlice = createSlice({
         set_user_details: (state, action: PayloadAction<any>) => {
             state.id = action.payload.id;
             state.username = action.payload.username;
+            state.email = action.payload.email;
             state.name = action.payload.name;
             state.role = action.payload.role;
             state.profile_pic_path = action.payload.profile_pic_path;
@@ -44,6 +47,7 @@ export const userDetailsSlice = createSlice({
         clear_user_details: (state) => {
             state.id = '';
             state.username = '';
+            state.email = '';
             state.name = '';
             state.role = [];
             state.profile_pic_path = '';
@@ -66,6 +70,7 @@ export const usersSlice = createSlice({
                 {
                     username: '',
                     name: '',
+                    email: '',
                     role: [],
                     profile_pic_path: [],
                 },

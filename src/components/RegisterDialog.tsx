@@ -22,17 +22,19 @@ export default function LoginDialog() {
 
     interface FormData {
         name: string;
+        email: string;
         username: string;
         password: string;
     }
     const [formData, setFormData] = useState<FormData>({
         name: "",
+        email: "",
         username: "",
         password: "",
     });
     const [errors, setErrors] = useState<any>({});
     const RegisterClose = () => {
-        setFormData({ name: "", username: "", password: "" });
+        setFormData({ name: "", username: "", password: "", email: "" });
         dispatch(set_register_dialog(false));
         setErrors({});
     };
@@ -42,6 +44,7 @@ export default function LoginDialog() {
         if (Object.keys(handleErrorChange(null)).length === 0) {
             const payload = {
                 name: formData.name,
+                email: formData.email,
                 username: formData.username,
                 password: formData.password,
                 role: [1]
@@ -91,6 +94,12 @@ export default function LoginDialog() {
             }
         }
 
+        if (!current_field || current_field === 'email') {
+            if (!formData.email.trim()) {
+                validationErrors.email = "email is required";
+            }
+        }
+
         if (!current_field || current_field === 'username') {
             if (!formData.username.trim()) {
                 validationErrors.username = "username is required";
@@ -129,6 +138,13 @@ export default function LoginDialog() {
                                 variant="outlined"
                                 name="name"
                                 error={!!errors.name}
+                                onChange={handleFieldChange}
+                            />
+                            <TextField
+                                label="Email"
+                                variant="outlined"
+                                name="email"
+                                error={!!errors.email}
                                 onChange={handleFieldChange}
                             />
                             <TextField

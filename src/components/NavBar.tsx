@@ -41,65 +41,11 @@ export default function ResponsiveAppBar() {
   const location = useLocation()
 
 
-  // const [current_path, set_current_path] = useState<any>({});
+
 
   useEffect(() => {
     // getUserDetails()(dispatch);
   }, []);
-
-
-  // useEffect(() => {
-  //   let newPathname = location.pathname.substring(1);
-  //   set_current_path(newPathname)
-  // }, [location])
-
-  // useEffect(() => {
-  //   if (current_path != null) {
-  //     if (userDetails.role.length > 0) {
-  //       console.log(current_path)
-  //     }
-  //   }
-
-  // }, [current_path])
-
-
-
-
-  useEffect(() => {
-    // console.log(userDetails)
-    // console.log(location.pathname.substring(1))
-    // if (userDetails.role.length > 0) {
-    //   console.log('if')
-    //   const role = roles.find((r) => r.id === userDetails.role[0]);
-    //   if (!role) {
-    //     // console.log('if')
-    //     // navigate(role.pages[0]);
-    //     // navigate('')
-    //   }
-    // }
-    // else {
-    //   console.log('else')
-    //   navigate('')
-    // }
-  
-    if (userDetails.id != '') {
-      const access: string[] = [];
-      userDetails.role.forEach(item => {
-        const role = roles.find((r) => r.id === item);
-        role?.pages.forEach(element => {
-          access.push(element)
-        });
-      })
-      const default_access = roles.find((r) => r.id === userDetails.role[0])?.pages[0]
-      const pathToGo = (location.pathname.substring(1))
-      if (!access.includes(pathToGo)) {
-        // window.location.reload()
-        // console.log('no access2')
-        // navigate(`/${default_access}`);
-      }
-    }
-  }, [userDetails]); // Trigger this effect whenever userDetails changes
-
 
   const SwitchPage = (item: string) => {
     navigate(`/${item}`,{ replace: true });
