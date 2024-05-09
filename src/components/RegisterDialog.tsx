@@ -142,18 +142,17 @@ export default function LoginDialog() {
             message: "Name is required",
         },
         email: {
-            rule: (value) => !value.trim(),
-            message: "Email is required",
+            rule: (value) => !value.trim() || !/\S+@\S+\.\S+/.test(value),
+            message: "Please enter a valid email address",
         },
         username: {
             rule: (value) => !value.trim(),
             message: "Username is required",
         },
         password: {
-            rule: (value) => !value.trim(),
-            message: "Password is required",
+            rule: (value) => !value.trim() || value.length < 6 || value.length > 11,
+            message: "Password should be between 6 and 11 characters",
         },
-
     };
 
 
@@ -178,6 +177,7 @@ export default function LoginDialog() {
                                 name="name"
                                 error={!!errors.name}
                                 onChange={handleFieldChange}
+                                onBlur={handleFieldChange}
                             />
                             <span>{errors.name}</span>
                             <TextField
@@ -186,6 +186,7 @@ export default function LoginDialog() {
                                 name="email"
                                 error={!!errors.email}
                                 onChange={handleFieldChange}
+                                onBlur={handleFieldChange}
                             />
                             <span>{errors.email}</span>
                             <TextField
@@ -194,6 +195,7 @@ export default function LoginDialog() {
                                 name="username"
                                 error={!!errors.username}
                                 onChange={handleFieldChange}
+                                onBlur={handleFieldChange}
                             />
                             <span>{errors.username}</span>
                             <TextField
@@ -203,6 +205,7 @@ export default function LoginDialog() {
                                 error={!!errors.password}
                                 type="password"
                                 onChange={handleFieldChange}
+                                onBlur={handleFieldChange}
                             />
                             <span>{errors.password}</span>
                         </div>
