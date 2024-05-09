@@ -97,43 +97,18 @@ export default function LoginDialog() {
 
 
     const validateForm = () => {
-        const validationErrors: any = {}
-        if (!formData.name.trim()) {
-            validationErrors.name = "name is required"
+        const validationErrors = {};
 
-        }
-        if (!formData.email.trim()) {
-            validationErrors.email = "email is required"
+        Object.entries(validationRules).forEach(([fieldName, ruleObj]) => {
+            const { rule, message } = ruleObj;
+            if (rule(formData[fieldName])) {
+                validationErrors[fieldName] = message;
+            }
+        });
 
-        }
-        if (!formData.username.trim()) {
-            validationErrors.username = "username is required"
-
-        }
-
-        if (!formData.password.trim()) {
-            validationErrors.password = "password is required"
-
-        }
-        if (formData.password.length < 6) {
-            validationErrors.password = "password should be at least 6 char"
-        }
-
-        setErrors(validationErrors)
-        return validationErrors
+        setErrors(validationErrors);
+        return validationErrors;
     }
-
-    const handleErrorChange = (focus) => {
-        const updatedErrors = { ...errors };
-        const { rule, message } = validationRules[focus];
-        const isError = rule(formData[focus]);
-        if (isError) {
-            updatedErrors[focus] = message;
-        } else {
-            delete updatedErrors[focus];
-        }
-        setErrors(updatedErrors);
-    };
 
 
     const validationRules = {
@@ -155,6 +130,17 @@ export default function LoginDialog() {
         },
     };
 
+    const handleErrorChange = (focus) => {
+        const updatedErrors = { ...errors };
+        const { rule, message } = validationRules[focus];
+        const isError = rule(formData[focus]);
+        if (isError) {
+            updatedErrors[focus] = message;
+        } else {
+            delete updatedErrors[focus];
+        }
+        setErrors(updatedErrors);
+    };
 
     return (
         <React.Fragment>
