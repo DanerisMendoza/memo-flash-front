@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.error{
+  color: red;
+  text-align: center;
+}
+
 body {
   font-weight: normal;
   font-family: "Lexend Deca";

@@ -95,6 +95,17 @@ export default function LoginDialog() {
         }
     }, [formData]);
 
+    const handleErrorChange = (focus) => {
+        const updatedErrors = { ...errors };
+        const { rule, message } = validationRules[focus];
+        const isError = rule(formData[focus]);
+        if (isError) {
+            updatedErrors[focus] = message;
+        } else {
+            delete updatedErrors[focus];
+        }
+        setErrors(updatedErrors);
+    };
 
     const validateForm = () => {
         const validationErrors = {};
@@ -130,17 +141,6 @@ export default function LoginDialog() {
         },
     };
 
-    const handleErrorChange = (focus) => {
-        const updatedErrors = { ...errors };
-        const { rule, message } = validationRules[focus];
-        const isError = rule(formData[focus]);
-        if (isError) {
-            updatedErrors[focus] = message;
-        } else {
-            delete updatedErrors[focus];
-        }
-        setErrors(updatedErrors);
-    };
 
     return (
         <React.Fragment>
@@ -165,7 +165,7 @@ export default function LoginDialog() {
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
                             />
-                            <span>{errors.name}</span>
+                            <span className="error">{errors.name}</span>
                             <TextField
                                 label="Email"
                                 variant="outlined"
@@ -174,7 +174,7 @@ export default function LoginDialog() {
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
                             />
-                            <span>{errors.email}</span>
+                            <span className="error">{errors.email}</span>
                             <TextField
                                 label="Username"
                                 variant="outlined"
@@ -183,7 +183,7 @@ export default function LoginDialog() {
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
                             />
-                            <span>{errors.username}</span>
+                            <span className="error">{errors.username}</span>
                             <TextField
                                 label="Password"
                                 variant="outlined"
@@ -193,7 +193,7 @@ export default function LoginDialog() {
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
                             />
-                            <span>{errors.password}</span>
+                            <span className="error">{errors.password}</span>
                         </div>
                     </form>
                 </DialogContent>
