@@ -26,6 +26,7 @@ export default function LoginDialog() {
         username: string;
         password: string;
     }
+    const [currentField, setCurrentField] = useState(null);
     const [formData, setFormData] = useState<FormData>({
         name: "",
         email: "",
@@ -41,7 +42,8 @@ export default function LoginDialog() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (Object.keys(handleErrorChange(null)).length === 0) {
+        const result = validateForm();
+        if (Object.keys(result).length == 0) {
             const payload = {
                 name: formData.name,
                 email: formData.email,
@@ -73,6 +75,7 @@ export default function LoginDialog() {
                     }
                 });
         }
+
     };
 
 
@@ -82,41 +85,77 @@ export default function LoginDialog() {
             ...formData,
             [name]: value,
         });
-        handleErrorChange(name);
+        setCurrentField(name)
+
     };
 
-    const handleErrorChange = (current_field) => {
-        const validationErrors: any = {};
+    useEffect(() => {
+        if (currentField != null) {
+            handleErrorChange(currentField);
+        }
+    }, [formData]);
 
-        if (!current_field || current_field === 'name') {
-            if (!formData.name.trim()) {
-                validationErrors.name = "name is required";
-            }
+
+    const validateForm = () => {
+        const validationErrors: any = {}
+        if (!formData.name.trim()) {
+            validationErrors.name = "name is required"
+
+        }
+        if (!formData.email.trim()) {
+            validationErrors.email = "email is required"
+
+        }
+        if (!formData.username.trim()) {
+            validationErrors.username = "username is required"
+
         }
 
-        if (!current_field || current_field === 'email') {
-            if (!formData.email.trim()) {
-                validationErrors.email = "email is required";
-            }
+        if (!formData.password.trim()) {
+            validationErrors.password = "password is required"
+
+        }
+        if (formData.password.length < 6) {
+            validationErrors.password = "password should be at least 6 char"
         }
 
-        if (!current_field || current_field === 'username') {
-            if (!formData.username.trim()) {
-                validationErrors.username = "username is required";
-            }
-        }
+        setErrors(validationErrors)
+        return validationErrors
+    }
 
-        if (!current_field || current_field === 'password') {
-            if (!formData.password.trim()) {
-                validationErrors.password = "password is required";
-            } else if (formData.password.length < 7) {
-                validationErrors.password = "password should be at least 8 characters";
-            }
+    const handleErrorChange = (focus) => {
+        const updatedErrors = { ...errors };
+        const { rule, message } = validationRules[focus];
+        const isError = rule(formData[focus]);
+        if (isError) {
+            updatedErrors[focus] = message;
+        } else {
+            delete updatedErrors[focus];
         }
-
-        setErrors(validationErrors);
-        return validationErrors;
+        setErrors(updatedErrors);
     };
+
+
+    const validationRules = {
+        name: {
+            rule: (value) => !value.trim(),
+            message: "Name is required",
+        },
+        email: {
+            rule: (value) => !value.trim(),
+            message: "Email is required",
+        },
+        username: {
+            rule: (value) => !value.trim(),
+            message: "Username is required",
+        },
+        password: {
+            rule: (value) => !value.trim(),
+            message: "Password is required",
+        },
+
+    };
+
 
     return (
         <React.Fragment>
@@ -140,6 +179,7 @@ export default function LoginDialog() {
                                 error={!!errors.name}
                                 onChange={handleFieldChange}
                             />
+                            <span>{errors.name}</span>
                             <TextField
                                 label="Email"
                                 variant="outlined"
@@ -147,6 +187,7 @@ export default function LoginDialog() {
                                 error={!!errors.email}
                                 onChange={handleFieldChange}
                             />
+                            <span>{errors.email}</span>
                             <TextField
                                 label="Username"
                                 variant="outlined"
@@ -154,6 +195,7 @@ export default function LoginDialog() {
                                 error={!!errors.username}
                                 onChange={handleFieldChange}
                             />
+                            <span>{errors.username}</span>
                             <TextField
                                 label="Password"
                                 variant="outlined"
@@ -162,6 +204,7 @@ export default function LoginDialog() {
                                 type="password"
                                 onChange={handleFieldChange}
                             />
+                            <span>{errors.password}</span>
                         </div>
                     </form>
                 </DialogContent>
