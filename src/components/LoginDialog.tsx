@@ -136,12 +136,12 @@ export default function LoginDialog() {
         },
         password: {
             rule: (value) => !value.trim() || value.length < 6 || value.length > 11,
-            message: "Password should be between 6 and 11 characters",
+            message: "between 6 and 11 characters",
         },
     };
 
     return (
-        <React.Fragment>
+        <React.Fragment >
             <Dialog
                 open={LoginDialogState}
                 onClose={LoginClose}
@@ -152,7 +152,7 @@ export default function LoginDialog() {
                 <DialogTitle id="alert-dialog-title">
                     <div className="text-center">{"Login"}</div>
                 </DialogTitle>
-                <DialogContent style={{width:'24rem'}}>
+                <DialogContent className="w-58 lg:w-96">
                     <form>
                         <div className="flex flex-col gap-2 p-2">
                             <TextField
@@ -162,8 +162,9 @@ export default function LoginDialog() {
                                 error={!!errors.username}
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
+                                helperText={errors.username}
                             />
-                            <span className="error">{errors.username}</span>
+                     
                             <TextField
                                 label="Password"
                                 variant="outlined"
@@ -172,8 +173,8 @@ export default function LoginDialog() {
                                 type="password"
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
+                                helperText={errors.password}
                             />
-                            <span className="error">{errors.password}</span>
                         </div>
                     </form>
                 </DialogContent>

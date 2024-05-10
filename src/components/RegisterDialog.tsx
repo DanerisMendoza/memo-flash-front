@@ -34,7 +34,7 @@ export default function LoginDialog() {
         password: "",
     });
     const [errors, setErrors] = useState<any>({});
- const RegisterClose = (event, reason) => {
+    const RegisterClose = (event, reason) => {
         if (reason && reason === "backdropClick") {
             return;
         }
@@ -140,7 +140,7 @@ export default function LoginDialog() {
         },
         password: {
             rule: (value) => !value.trim() || value.length < 6 || value.length > 11,
-            message: "Password should be between 6 and 11 characters",
+            message: "between 6 and 11 characters",
         },
     };
 
@@ -152,12 +152,12 @@ export default function LoginDialog() {
                 onClose={RegisterClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
-                style={{ zIndex: "0" }}
+                style={{ zIndex: "0", }}
             >
                 <DialogTitle id="alert-dialog-title">
                     <div className="text-center">{"User Registration"}</div>
                 </DialogTitle>
-                <DialogContent style={{width:'24rem'}}>
+                <DialogContent className="w-58 lg:w-96">
                     <form>
                         <div className="flex flex-col gap-2 p-2">
                             <TextField
@@ -167,8 +167,8 @@ export default function LoginDialog() {
                                 error={!!errors.name}
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
+                                helperText={errors.name}
                             />
-                            <span className="error">{errors.name}</span>
                             <TextField
                                 label="Email"
                                 variant="outlined"
@@ -176,8 +176,8 @@ export default function LoginDialog() {
                                 error={!!errors.email}
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
+                                helperText={errors.email}
                             />
-                            <span className="error">{errors.email}</span>
                             <TextField
                                 label="Username"
                                 variant="outlined"
@@ -185,8 +185,8 @@ export default function LoginDialog() {
                                 error={!!errors.username}
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
+                                helperText={errors.username}
                             />
-                            <span className="error">{errors.username}</span>
                             <TextField
                                 label="Password"
                                 variant="outlined"
@@ -195,14 +195,14 @@ export default function LoginDialog() {
                                 type="password"
                                 onChange={handleFieldChange}
                                 onBlur={handleFieldChange}
+                                helperText={errors.password}
                             />
-                            <span className="error">{errors.password}</span>
                         </div>
                     </form>
                 </DialogContent>
                 <DialogActions>
                     <div className="w-full flex flex-row justify-center gap-2 pb-4">
-                        <Button variant="contained"  onClick={(event) => RegisterClose(event, 'buttonClick')}>
+                        <Button variant="contained" onClick={(event) => RegisterClose(event, 'buttonClick')}>
                             Cancel
                         </Button>
                         <Button variant="contained" onClick={handleSubmit} autoFocus>
