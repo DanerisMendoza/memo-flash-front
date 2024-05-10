@@ -37,7 +37,10 @@ export default function LoginDialog() {
         { role: 1, pages: ['Deck', 'Profile'] }
     ];
     const [errors, setErrors] = useState<any>({});
-    const LoginClose = () => {
+    const LoginClose = (event, reason) => {
+        if (reason && reason === "backdropClick") {
+            return;
+        }
         setErrors({});
         dispatch(set_login_dialog(false));
     };

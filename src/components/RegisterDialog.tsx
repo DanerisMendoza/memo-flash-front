@@ -34,7 +34,10 @@ export default function LoginDialog() {
         password: "",
     });
     const [errors, setErrors] = useState<any>({});
-    const RegisterClose = () => {
+ const RegisterClose = (event, reason) => {
+        if (reason && reason === "backdropClick") {
+            return;
+        }
         setFormData({ name: "", username: "", password: "", email: "" });
         dispatch(set_register_dialog(false));
         setErrors({});
