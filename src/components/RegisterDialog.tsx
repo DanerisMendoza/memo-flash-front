@@ -64,7 +64,7 @@ export default function LoginDialog() {
                             text: "Registration successful!",
                         });
                     }, 1000);
-                    RegisterClose();
+                    RegisterClose;
                 })
                 .catch((error) => {
                     if (error.response.status === 400) {
@@ -157,7 +157,7 @@ export default function LoginDialog() {
                 <DialogTitle id="alert-dialog-title">
                     <div className="text-center">{"User Registration"}</div>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent style={{width:'24rem'}}>
                     <form>
                         <div className="flex flex-col gap-2 p-2">
                             <TextField
@@ -202,7 +202,7 @@ export default function LoginDialog() {
                 </DialogContent>
                 <DialogActions>
                     <div className="w-full flex flex-row justify-center gap-2 pb-4">
-                        <Button variant="contained" onClick={RegisterClose}>
+                        <Button variant="contained"  onClick={(event) => RegisterClose(event, 'buttonClick')}>
                             Cancel
                         </Button>
                         <Button variant="contained" onClick={handleSubmit} autoFocus>

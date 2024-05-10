@@ -71,7 +71,7 @@ export default function LoginDialog() {
                         }).catch((error: any) => {
                             navigate("/");
                         })
-                        LoginClose()
+                        LoginClose;
                     }
                 })
                 .catch((error) => {
@@ -152,7 +152,7 @@ export default function LoginDialog() {
                 <DialogTitle id="alert-dialog-title">
                     <div className="text-center">{"Login"}</div>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent style={{width:'24rem'}}>
                     <form>
                         <div className="flex flex-col gap-2 p-2">
                             <TextField
@@ -179,7 +179,7 @@ export default function LoginDialog() {
                 </DialogContent>
                 <DialogActions>
                     <div className="w-full flex flex-row justify-center gap-2 pb-4">
-                        <Button variant="contained" onClick={LoginClose}>
+                        <Button variant="contained" onClick={(event) => LoginClose(event, 'buttonClick')}>
                             Cancel
                         </Button>
                         <Button variant="contained" onClick={login} autoFocus>
