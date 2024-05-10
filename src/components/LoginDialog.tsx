@@ -26,6 +26,7 @@ export default function LoginDialog() {
         username: string;
         password: string;
     }
+    const [currentField, setCurrentField] = useState(null);
     const [formData, setFormData] = useState<FormData>({
         name: "",
         username: "",
@@ -37,12 +38,14 @@ export default function LoginDialog() {
     ];
     const [errors, setErrors] = useState<any>({});
     const LoginClose = () => {
+        setErrors({});
         dispatch(set_login_dialog(false));
     };
 
     const login = async (e) => {
         e.preventDefault();
-        if (Object.keys(handleErrorChange(null)).length === 0) {
+        const result = validateForm();
+        if (Object.keys(result).length == 0) {
             const payload = {
                 username: formData.username,
                 password: formData.password,
@@ -62,14 +65,14 @@ export default function LoginDialog() {
                             })
                             const default_access = roles.find((r) => r.role === response.data.role[0])?.pages[0]
                             navigate(`${default_access}`);
-                        }).catch((error: any) => { 
+                        }).catch((error: any) => {
                             navigate("/");
                         })
                         LoginClose()
                     }
                 })
                 .catch((error) => {
-                    if (error.response.status === 400) {
+                    if (error.response.status === 401 || error.response.status === 404) {
                         const message = error.response.data.message;
                         Swal.fire({
                             icon: "error",
@@ -88,29 +91,52 @@ export default function LoginDialog() {
             ...formData,
             [name]: value,
         });
-        handleErrorChange(name);
+        setCurrentField(name)
     };
 
-    const handleErrorChange = (current_field) => {
-        const validationErrors: any = {};
-
-        if (!current_field || current_field === 'username') {
-            if (!formData.username.trim()) {
-                validationErrors.username = "username is required";
-            }
+    useEffect(() => {
+        if (currentField != null) {
+            handleErrorChange(currentField);
         }
+    }, [formData]);
 
-        if (!current_field || current_field === 'password') {
-            if (!formData.password.trim()) {
-                validationErrors.password = "password is required";
-            } else if (formData.password.length < 7) {
-                validationErrors.password = "password should be at least 8 characters";
-            }
+    const handleErrorChange = (focus) => {
+        const updatedErrors = { ...errors };
+        const { rule, message } = validationRules[focus];
+        const isError = rule(formData[focus]);
+        if (isError) {
+            updatedErrors[focus] = message;
+        } else {
+            delete updatedErrors[focus];
         }
+        setErrors(updatedErrors);
+    };
+
+    const validateForm = () => {
+        const validationErrors = {};
+
+        Object.entries(validationRules).forEach(([fieldName, ruleObj]) => {
+            const { rule, message } = ruleObj;
+            if (rule(formData[fieldName])) {
+                validationErrors[fieldName] = message;
+            }
+        });
 
         setErrors(validationErrors);
         return validationErrors;
+    }
+
+    const validationRules = {
+        username: {
+            rule: (value) => !value.trim(),
+            message: "Username is required",
+        },
+        password: {
+            rule: (value) => !value.trim() || value.length < 6 || value.length > 11,
+            message: "Password should be between 6 and 11 characters",
+        },
     };
+
     return (
         <React.Fragment>
             <Dialog
@@ -132,7 +158,9 @@ export default function LoginDialog() {
                                 name="username"
                                 error={!!errors.username}
                                 onChange={handleFieldChange}
+                                onBlur={handleFieldChange}
                             />
+                            <span className="error">{errors.username}</span>
                             <TextField
                                 label="Password"
                                 variant="outlined"
@@ -140,7 +168,9 @@ export default function LoginDialog() {
                                 error={!!errors.password}
                                 type="password"
                                 onChange={handleFieldChange}
+                                onBlur={handleFieldChange}
                             />
+                            <span className="error">{errors.password}</span>
                         </div>
                     </form>
                 </DialogContent>
