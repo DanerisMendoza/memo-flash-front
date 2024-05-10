@@ -1,7 +1,6 @@
 import React from 'react';
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from 'react-redux'
-import { getUserDetails, getUsers, deleteUser } from '../features/user/details'
 import { useState, useEffect } from 'react'
 import { Button, Chip } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -22,7 +21,7 @@ export default function Users() {
     const dispatch = useDispatch()
     const [isLg, setIsLg] = useState(window.innerWidth >= 1024);
     const userDetails = useSelector(
-        (state: RootState) => state.userDetails
+        (state: RootState) => state.userReducer.USER_DETAILS
     );
     const [operation, set_operation] = useState<string>('');
     interface FormData {

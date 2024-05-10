@@ -9,8 +9,7 @@ import Button from "@mui/material/Button";
 
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
-import { set_register_dialog, set_login_dialog } from "../features/user/components.js";
-import { set_user_details, getUserDetails } from '../features/user/details'
+import {LOGIN_DIALOG, getUserDetails} from '../store/user.tsx'
 import axiosInstance from '../api.js';
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -19,7 +18,7 @@ export default function LoginDialog() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const LoginDialogState = useSelector(
-        (state: RootState) => state.LoginDialog.value
+        (state: RootState) => state.userReducer.LOGIN_DIALOG
     );
     interface FormData {
         name: string;
@@ -42,7 +41,7 @@ export default function LoginDialog() {
             return;
         }
         setErrors({});
-        dispatch(set_login_dialog(false));
+        dispatch(LOGIN_DIALOG(false));
     };
 
     const login = async (e) => {
@@ -71,7 +70,7 @@ export default function LoginDialog() {
                         }).catch((error: any) => {
                             navigate("/");
                         })
-                        LoginClose;
+                        LoginClose(event, 'buttonClick')
                     }
                 })
                 .catch((error) => {

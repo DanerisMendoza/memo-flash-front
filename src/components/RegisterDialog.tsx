@@ -9,15 +9,14 @@ import Button from "@mui/material/Button";
 
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
-import { set_register_dialog, set_login_dialog } from "../features/user/components.js";
-import { set_user_details, getUserDetails } from '../features/user/details'
+import {REGISTER_DIALOG} from '../store/user.tsx'
 import axiosInstance from '../api.js';
 import Swal from "sweetalert2";
 
 export default function LoginDialog() {
     const dispatch = useDispatch();
     const registerDialog = useSelector(
-        (state: RootState) => state.registerDialog.value
+        (state: RootState) => state.userReducer.REGISTER_DIALOG
     );
 
     interface FormData {
@@ -39,7 +38,7 @@ export default function LoginDialog() {
             return;
         }
         setFormData({ name: "", username: "", password: "", email: "" });
-        dispatch(set_register_dialog(false));
+        dispatch(REGISTER_DIALOG(false));
         setErrors({});
     };
 
@@ -64,7 +63,7 @@ export default function LoginDialog() {
                             text: "Registration successful!",
                         });
                     }, 1000);
-                    RegisterClose;
+                    RegisterClose(event, 'buttonClick')
                 })
                 .catch((error) => {
                     if (error.response.status === 400) {

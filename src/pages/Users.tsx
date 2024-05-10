@@ -1,7 +1,7 @@
 import React from 'react';
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from 'react-redux'
-import { getUserDetails, getUsers, deleteUser } from '../features/user/details'
+import {LOGIN_DIALOG, REGISTER_DIALOG, CLEAR_USER_DETAILS, getUserDetails, getUsers, deleteUser} from '../store/user.tsx'
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react'
 import { Button, Chip } from '@mui/material';
@@ -10,11 +10,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export default function Users() {
     const dispatch = useDispatch()
     const userDetails = useSelector(
-        (state: RootState) => state.userDetails
+        (state: RootState) => state.userReducer.USER_DETAILS
     );
     
     const users = useSelector(
-        (state: RootState) => state.users
+        (state: RootState) => state.userReducer.USERS
     );
 
     useEffect(() => {

@@ -16,8 +16,7 @@ import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { set_register_dialog, set_login_dialog } from '../features/user/components'
-import { set_user_details, clear_user_details, getUserDetails } from '../features/user/details'
+import {LOGIN_DIALOG, REGISTER_DIALOG, CLEAR_USER_DETAILS} from '../store/user.tsx'
 
 import type { RootState } from '../store/store'
 
@@ -35,7 +34,7 @@ export default function ResponsiveAppBar() {
   const dispatch = useDispatch()
 
   const userDetails = useSelector(
-    (state: RootState) => state.userDetails
+    (state: RootState) => state.userReducer.USER_DETAILS
   );
 
   const location = useLocation()
@@ -51,15 +50,15 @@ export default function ResponsiveAppBar() {
     navigate(`/${item}`,{ replace: true });
   };
   const Login = () => {
-    dispatch(set_login_dialog(true))
+    dispatch(LOGIN_DIALOG(true))
   };
   const Register = () => {
-    dispatch(set_register_dialog(true))
+    dispatch(REGISTER_DIALOG(true))
   };
 
   const HandleSettings = (item: string) => {
     if (item === 'logout') {
-      dispatch(clear_user_details())
+      dispatch(CLEAR_USER_DETAILS())
       navigate('');
       localStorage.removeItem("mff-token");
     }

@@ -1,7 +1,7 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { getUserDetails } from '../features/user/details'
+import {LOGIN_DIALOG, REGISTER_DIALOG, CLEAR_USER_DETAILS, getUserDetails} from '../store/user.tsx'
 import { useNavigate } from "react-router-dom";
 import React from 'react';
 

@@ -1,7 +1,7 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { set_user_details, clear_user_details, getUserDetails } from '../features/user/details'
+import {LOGIN_DIALOG, REGISTER_DIALOG, CLEAR_USER_DETAILS, getUserDetails} from '../store/user.tsx'
 import { useNavigate, useLocation } from "react-router-dom";
 import type { RootState } from '../store/store'
 import React from 'react';
