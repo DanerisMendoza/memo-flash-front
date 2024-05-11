@@ -10,9 +10,6 @@ const PrivateRoutes = () => {
   const navigate = useNavigate();
   const location = useLocation()
 
-  const userDetails = useSelector(
-    (state: RootState) => state.userDetails
-  );
   const dispatch = useDispatch()
   const roles = [
     { role: 0, pages: ['Users'] },

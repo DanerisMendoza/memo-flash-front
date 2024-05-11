@@ -12,10 +12,12 @@ import { styled } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
+import TextField from "@mui/material/TextField";
 import Input from '@mui/joy/Input';
 import { Margin } from '@mui/icons-material';
 import axiosInstance from '../api.js';
 import Swal from "sweetalert2";
+import { getUserDetails } from '../store/user.tsx'
 
 export default function Users() {
     const dispatch = useDispatch()
@@ -28,20 +30,19 @@ export default function Users() {
         name: string;
         username: string;
         email: string;
-        password: string;
         picture: File | null;
     }
     const [formData, setFormData] = useState<FormData>({
         name: "",
         username: "",
         email: "",
-        password: "",
         picture: null,
     });
-
-    // useEffect(() => {
-    //     console.log(userDetails)
-    // }, [userDetails]);
+    const [errors, setErrors] = useState<any>({});
+    const [currentField, setCurrentField] = useState(null);
+    useEffect(() => {
+        // console.log(userDetails)
+    }, [userDetails]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -70,32 +71,44 @@ export default function Users() {
     }
 
     const submit = async () => {
-        const payload = new FormData()
-        payload.append('name', formData.name);
-        payload.append('username', formData.username);
-        payload.append('email', formData.email);
-        payload.append('password', formData.password);
-        if (formData.picture !== null) {
-            payload.append('picture', formData.picture);
-        } else {
-            payload.append('picture', '');
-        }
+        const result = validateForm();
+        if (Object.keys(result).length == 0) {
+            const payload = new FormData()
+            payload.append('name', formData.name);
+            payload.append('username', formData.username);
+            payload.append('email', formData.email);
+            if (formData.picture !== null) {
+                payload.append('picture', formData.picture);
+            } else {
+                payload.append('picture', '');
+            }
 
-        await axiosInstance
-            .put(`/api/users/${userDetails.id}`, payload)
-            .then((response) => {
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Success!",
-                        text: "Update User successful!",
-                    });
-                }, 1000);
-                set_operation('')
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+            await axiosInstance
+                .put(`/api/users/${userDetails.id}`, payload)
+                .then((response) => {
+                    if (response.status === 200) {
+                        localStorage.setItem("mff-token", response.data.token);
+                        getUserDetails(dispatch)
+                        setTimeout(() => {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success!",
+                                text: "Update User successful!",
+                            });
+                        }, 1000);
+                        set_operation('')
+                    }
+                })
+                .catch((error) => {
+                    if (error.response.status === 409) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error!",
+                            text: error.response.data.message, 
+                        });
+                    }
+                });
+        }
     }
 
     const cancel = () => {
@@ -120,7 +133,57 @@ export default function Users() {
             ...formData,
             [name]: value,
         });
+        setCurrentField(name)
     };
+
+    useEffect(() => {
+        if (currentField != null) {
+            handleErrorChange(currentField);
+        }
+    }, [formData]);
+
+    const handleErrorChange = (focus) => {
+        const updatedErrors = { ...errors };
+        const { rule, message } = validationRules[focus];
+        const isError = rule(formData[focus]);
+        if (isError) {
+            updatedErrors[focus] = message;
+        } else {
+            delete updatedErrors[focus];
+        }
+        setErrors(updatedErrors);
+    };
+
+    const validateForm = () => {
+        const validationErrors = {};
+
+        Object.entries(validationRules).forEach(([fieldName, ruleObj]) => {
+            const { rule, message } = ruleObj;
+            if (rule(formData[fieldName])) {
+                validationErrors[fieldName] = message;
+            }
+        });
+
+        setErrors(validationErrors);
+        return validationErrors;
+    }
+
+
+    const validationRules = {
+        name: {
+            rule: (value) => !value.trim(),
+            message: "Name is required",
+        },
+        email: {
+            rule: (value) => !value.trim() || !/\S+@\S+\.\S+/.test(value),
+            message: "Please enter a valid email address",
+        },
+        username: {
+            rule: (value) => !value.trim(),
+            message: "Username is required",
+        },
+    };
+
 
 
     return <div className="flex flex-col  h-full w-screen  p-8 mt-4">
@@ -157,37 +220,35 @@ export default function Users() {
                                 <div className=' m-auto flex flex-col gap-2'>
                                     {operation === 'edit' ? (
                                         <>
-                                            <Input
+                                            <TextField
                                                 placeholder="Name"
                                                 variant="outlined"
                                                 name="name"
-                                                value={`${userDetails.name}`}
-                                                // error={!!errors.username}
+                                                defaultValue={`${userDetails.name}`}
+                                                error={!!errors.name}
+                                                helperText={errors.name}
                                                 onChange={handleFieldChange}
+                                                onBlur={handleFieldChange}
                                             />
-                                            <Input
+                                            <TextField
                                                 placeholder="Email"
                                                 variant="outlined"
                                                 name="email"
-                                                value={`${userDetails.email}`}
-                                                // error={!!errors.username}
+                                                defaultValue={`${userDetails.email}`}
+                                                error={!!errors.email}
+                                                helperText={errors.email}
                                                 onChange={handleFieldChange}
+                                                onBlur={handleFieldChange}
                                             />
-                                            <Input
+                                            <TextField
                                                 placeholder="Username"
                                                 variant="outlined"
                                                 name="username"
-                                                value={`${userDetails.username}`}
-                                                // error={!!errors.username}
+                                                defaultValue={`${userDetails.username}`}
+                                                error={!!errors.username}
+                                                helperText={errors.username}
                                                 onChange={handleFieldChange}
-                                            />
-                                            <Input
-                                                placeholder="Password"
-                                                variant="outlined"
-                                                name="password"
-                                                type="password"
-                                                // error={!!errors.password}
-                                                onChange={handleFieldChange}
+                                                onBlur={handleFieldChange}
                                             />
                                         </>
                                     ) : (
