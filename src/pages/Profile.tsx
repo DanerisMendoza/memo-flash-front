@@ -67,7 +67,7 @@ export default function Users() {
             email: userDetails.email.toString(),
             avatar_name: userDetails.profile_pic_path.toString(),
         });
-        console.log(userDetails)
+        // console.log(userDetails)
     }, [userDetails]);
 
     const edit = () => {
@@ -202,7 +202,7 @@ export default function Users() {
                 <CardContent>
                     <div className='flex flex-col  drop-shadow-2xl'>
                         <div className='flex flex-col justify-between lg:flex-row items-center'>
-                            <div className='p-3 flex flex-col bg-white m-2 h-2/3 lg:h-1/3 lg:w-1/3' style={{ width: '40%' }}>
+                            <div className='p-3 flex flex-col bg-white m-2 h-2/3 w-4/5 lg:h-1/3 lg:w-1/3' >
                                 <img alt="avatar" src="/images/avatar.png" />
                                 {operation === 'edit' && (
                                     <Button
@@ -224,7 +224,7 @@ export default function Users() {
                                     </Button>)}
                             </div>
                             {/* <div className='grow'></div> */}
-                            <div className='grow flex flex-col  p-2 text-xl lg:text-2xl ' style={{ width: '60%' }}>
+                            <div className='grow flex flex-col  p-2 text-xl lg:text-2xl ' >
                                 <div className=' m-auto flex flex-col gap-2'>
                                     {operation === 'edit' ? (
                                         <>
