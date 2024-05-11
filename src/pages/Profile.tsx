@@ -30,13 +30,15 @@ export default function Users() {
         name: string;
         username: string;
         email: string;
-        picture: File | null;
+        avatar_name: string;
+        avatar: File | null;
     }
     const [formData, setFormData] = useState<FormData>({
         name: "",
         username: "",
         email: "",
-        picture: null,
+        avatar_name: "",
+        avatar: null,
     });
     const [errors, setErrors] = useState<any>({});
     const [currentField, setCurrentField] = useState(null);
@@ -63,7 +65,9 @@ export default function Users() {
             name: userDetails.name.toString(),
             username: userDetails.username.toString(),
             email: userDetails.email.toString(),
+            avatar_name: userDetails.profile_pic_path.toString(),
         });
+        console.log(userDetails)
     }, [userDetails]);
 
     const edit = () => {
@@ -73,19 +77,17 @@ export default function Users() {
     const submit = async () => {
         const result = validateForm();
         if (Object.keys(result).length == 0) {
-            const payload = new FormData()
-            payload.append('name', formData.name);
-            payload.append('username', formData.username);
-            payload.append('email', formData.email);
-            if (formData.picture !== null) {
-                payload.append('picture', formData.picture);
-            } else {
-                payload.append('picture', '');
-            }
-
+            const payload = formData
             await axiosInstance
                 .put(`/api/users/${userDetails.id}`, payload)
-                .then((response) => {
+                .then(async (response) => {
+                    if (formData.avatar != null) {
+                        const payload = new FormData()
+                        const updatedFile = new File([formData.avatar], response.data.profile_pic_path, { type: formData.avatar.type });
+                        payload.append('avatar', updatedFile);
+                        await axiosInstance.post(`/api/uploadAvatar`, payload)
+                    } 
+
                     if (response.status === 200) {
                         localStorage.setItem("mff-token", response.data.token);
                         getUserDetails(dispatch)
@@ -100,11 +102,11 @@ export default function Users() {
                     }
                 })
                 .catch((error) => {
-                    if (error.response.status === 409) {
+                    if (error.response.status == 409) {
                         Swal.fire({
                             icon: "error",
                             title: "Error!",
-                            text: error.response.data.message, 
+                            text: error.response.data.message,
                         });
                     }
                 });
@@ -209,7 +211,13 @@ export default function Users() {
                                         variant="contained"
                                         tabIndex={-1}
                                         startIcon={<CloudUploadIcon />}
-                                        onChange={(e) => setFormData({ ...formData, picture: (e.target as any).files ? (e.target as any).files[0] : null })}
+                                        onChange={(e) => {
+                                            setFormData({
+                                                ...formData,
+                                                avatar: (e.target as any).files ? (e.target as any).files[0] : null,
+                                                avatar_name: (e.target as any).files ? (e.target as any).files[0]?.name : ""
+                                            })
+                                        }}
                                     >
                                         Upload file
                                         <VisuallyHiddenInput type="file" />
