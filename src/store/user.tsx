@@ -88,7 +88,6 @@ const userSlice = createSlice({
 export const getUserDetails = (dispatch: any) => {
     return new Promise((resolve, reject) => {
         axiosInstance.get("/api/getUserByToken").then((response) => {
-            console.log(response.data)
             dispatch(USER_DETAILS(response.data));
             resolve(response);
         }).catch(error => {

@@ -26,6 +26,7 @@ export default function Users() {
         (state: RootState) => state.userReducer.USER_DETAILS
     );
     const [operation, set_operation] = useState<string>('');
+    const [avatar_upload, set_avatar_upload] = useState<any>(null);
     interface FormData {
         name: string;
         username: string;
@@ -67,7 +68,7 @@ export default function Users() {
             email: USER_DETAILS.email.toString(),
             avatar_name: USER_DETAILS.profile_pic_path.toString(),
         });
-        console.log(USER_DETAILS)
+        set_avatar_upload(USER_DETAILS.profile_pic)
     }, [USER_DETAILS]);
 
     const edit = () => {
@@ -143,6 +144,7 @@ export default function Users() {
         if (currentField != null) {
             handleErrorChange(currentField);
         }
+        // console.log(formData)
     }, [formData]);
 
     const handleErrorChange = (focus) => {
@@ -205,7 +207,7 @@ export default function Users() {
                     
                     <div className='h-full flex flex-col gap-2 lg:flex-row '>
                         <div className='flex flex-col gap-2 lg:w-2/5 justify-center'>
-                            <img className='w-1/3 self-center lg:w-4/5 ' alt="avatar" src={(USER_DETAILS as any).profile_pic} />
+                            <img className='w-1/3 self-center lg:w-4/5 ' alt="avatar" src={avatar_upload} />
                             <Button
                                 className={` w-full lg:w-4/5 lg:self-center ${operation === 'edit' ? '' : 'invisible'}`}
                                 component="label"
@@ -213,12 +215,28 @@ export default function Users() {
                                 tabIndex={-1}
                                 startIcon={<CloudUploadIcon />}
                                 onChange={(e) => {
-                                    setFormData({
-                                        ...formData,
-                                        avatar: (e.target as any).files ? (e.target as any).files[0] : null,
-                                        avatar_name: (e.target as any).files ? (e.target as any).files[0]?.name : ""
-                                    })
+                                    const file = (e.target as any).files ? (e.target as any).files[0] : null;
+                                    const fileName = file ? file.name : "";
+                                
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = (event: ProgressEvent<FileReader>) => {
+                                            const base64str = (event.target?.result as string).split(',')[1];
+                                            const image_format = fileName.split('.').pop(); // Get the file extension
+                                            if (image_format) {
+                                                const base64img = `data:image/${image_format};base64,${base64str}`;
+                                                setFormData({
+                                                    ...formData,
+                                                    avatar: file,
+                                                    avatar_name: fileName
+                                                });
+                                                set_avatar_upload(base64img);
+                                            }
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
                                 }}
+                                
                             >
                                 Upload Picture
                                 <VisuallyHiddenInput type="file" />
