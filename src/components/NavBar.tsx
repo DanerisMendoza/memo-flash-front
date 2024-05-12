@@ -111,8 +111,10 @@ export default function ResponsiveAppBar() {
                 <p className='p-2'>
                   {USER_DETAILS.name.split(' ')[0]}
                 </p>
-                {USER_DETAILS.profile_pic_path != '' && (
+                {USER_DETAILS.profile_pic_path != '' ? (
                   <Avatar alt="Remy Sharp" src={(USER_DETAILS as any).profile_pic} className='bg-white ' />
+                ) : (
+                  <Avatar src="/images/avatar.png"  className='bg-white ' />
                 )}
               </IconButton>
               <Menu

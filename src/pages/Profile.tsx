@@ -18,6 +18,7 @@ import { Margin } from '@mui/icons-material';
 import axiosInstance from '../api.js';
 import Swal from "sweetalert2";
 import { getUserDetails } from '../store/user.tsx'
+import Avatar from '@mui/material/Avatar';
 
 export default function Users() {
     const dispatch = useDispatch()
@@ -204,10 +205,14 @@ export default function Users() {
                             </Button>
                         </div>
                     )}
-                    
+
                     <div className='h-full flex flex-col gap-2 lg:flex-row '>
                         <div className='flex flex-col gap-2 lg:w-2/5 justify-center'>
-                            <img className='w-1/3 self-center lg:w-4/5 ' alt="avatar" src={avatar_upload} />
+                            {avatar_upload != null ? (
+                                <img className='w-1/3 self-center lg:w-4/5 ' alt="avatar" src={avatar_upload} />
+                            ) : (
+                                <img className='w-1/3 self-center lg:w-4/5 ' alt="avatar" src='/images/avatar.png' />
+                            )}
                             <Button
                                 className={` w-full lg:w-4/5 lg:self-center ${operation === 'edit' ? '' : 'invisible'}`}
                                 component="label"
@@ -217,7 +222,6 @@ export default function Users() {
                                 onChange={(e) => {
                                     const file = (e.target as any).files ? (e.target as any).files[0] : null;
                                     const fileName = file ? file.name : "";
-                                
                                     if (file) {
                                         const reader = new FileReader();
                                         reader.onload = (event: ProgressEvent<FileReader>) => {
@@ -236,7 +240,7 @@ export default function Users() {
                                         reader.readAsDataURL(file);
                                     }
                                 }}
-                                
+
                             >
                                 Upload Picture
                                 <VisuallyHiddenInput type="file" />
