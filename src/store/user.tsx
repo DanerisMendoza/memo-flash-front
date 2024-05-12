@@ -9,6 +9,7 @@ export interface UserDetailsState {
     name: String,
     role: number[], //0=> admin, 1=>enduser
     profile_pic_path: String,
+    profile_pic: any
 }
 
 
@@ -30,6 +31,7 @@ const initialState: UserState = {
         name: '',
         role: [],
         profile_pic_path: '',
+        profile_pic: null,
     },
     USERS: [],
 };
@@ -52,6 +54,7 @@ const userSlice = createSlice({
             state.USER_DETAILS.name = action.payload.name;
             state.USER_DETAILS.role = action.payload.role;
             state.USER_DETAILS.profile_pic_path = action.payload.profile_pic_path;
+            state.USER_DETAILS.profile_pic = action.payload.profile_pic;
         },
         CLEAR_USER_DETAILS: (state) => {
             state.USER_DETAILS.id = '';
@@ -60,6 +63,7 @@ const userSlice = createSlice({
             state.USER_DETAILS.name = '';
             state.USER_DETAILS.role = [];
             state.USER_DETAILS.profile_pic_path = '';
+            state.USER_DETAILS.profile_pic = null;
         },
         USERS: (state, action: PayloadAction<any>) => {
             state.USERS.splice(0, state.USERS.length);
@@ -73,6 +77,7 @@ const userSlice = createSlice({
                     email: '',
                     role: [],
                     profile_pic_path: [],
+                    profile_pic: null,
                 },
             ]
         },
@@ -83,6 +88,7 @@ const userSlice = createSlice({
 export const getUserDetails = (dispatch: any) => {
     return new Promise((resolve, reject) => {
         axiosInstance.get("/api/getUserByToken").then((response) => {
+            console.log(response.data)
             dispatch(USER_DETAILS(response.data));
             resolve(response);
         }).catch(error => {

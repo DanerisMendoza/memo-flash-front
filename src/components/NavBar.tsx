@@ -16,7 +16,7 @@ import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
-import {LOGIN_DIALOG, REGISTER_DIALOG, CLEAR_USER_DETAILS} from '../store/user.tsx'
+import { LOGIN_DIALOG, REGISTER_DIALOG, CLEAR_USER_DETAILS } from '../store/user.tsx'
 
 import type { RootState } from '../store/store'
 
@@ -33,7 +33,7 @@ export default function ResponsiveAppBar() {
 
   const dispatch = useDispatch()
 
-  const userDetails = useSelector(
+  const USER_DETAILS = useSelector(
     (state: RootState) => state.userReducer.USER_DETAILS
   );
 
@@ -43,11 +43,11 @@ export default function ResponsiveAppBar() {
 
 
   useEffect(() => {
-    // getUserDetails()(dispatch);
+    // getUSER_DETAILS()(dispatch);
   }, []);
 
   const SwitchPage = (item: string) => {
-    navigate(`/${item}`,{ replace: true });
+    navigate(`/${item}`, { replace: true });
   };
   const Login = () => {
     dispatch(LOGIN_DIALOG(true))
@@ -79,11 +79,11 @@ export default function ResponsiveAppBar() {
       <AppBar >
         <Toolbar >
           <AdbIcon />
-          {userDetails.role.length > 0 ? (
+          {USER_DETAILS.role.length > 0 ? (
             // logged in
             <>
               <Box sx={{ flexGrow: 1, display: 'flex' }}>
-                {userDetails.role.map((roleId) => {
+                {USER_DETAILS.role.map((roleId) => {
                   const role = roles.find((r) => r.id === roleId);
                   if (role) {
                     return role.pages.map((page, idx) => (
@@ -109,9 +109,11 @@ export default function ResponsiveAppBar() {
                 style={{ color: 'white' }}
               >
                 <p className='p-2'>
-                  {userDetails.name.split(' ')[0]}
+                  {USER_DETAILS.name.split(' ')[0]}
                 </p>
-                <Avatar alt="Remy Sharp" src="/images/avatar.png" className='bg-white ' />
+                {USER_DETAILS.profile_pic_path != '' && (
+                  <Avatar alt="Remy Sharp" src={(USER_DETAILS as any).profile_pic} className='bg-white ' />
+                )}
               </IconButton>
               <Menu
                 id="basic-menu"
