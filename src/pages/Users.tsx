@@ -22,7 +22,6 @@ export default function Users() {
     }, []);
 
   
-
     useEffect(() => {
         // console.log(users)
     }, [users]);
