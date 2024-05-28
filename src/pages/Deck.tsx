@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from 'react-redux'
-import { SET_DECK_DIALOG, getDeckByUserId, Deck as DeckInterface } from '../store/deck.tsx'
+import { SET_DECK_DIALOG, getDeckByUserId, Deck as DeckInterface, deleteDeckById } from '../store/deck.tsx'
 import DeckDialog from '../components/DeckDialog.tsx';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,15 +18,23 @@ export default function Inventory() {
     const DECKS = useSelector((state: RootState) => state.deckReducer.DECKS);
 
     useEffect(() => {
+        fetchDecks()
+    }, [])
+
+    const deleteSelectedDeck = (deck) => {
+        console.log(deck._id)
+        const payload = { id: deck._id }
+        deleteDeckById(payload).then(()=>{
+            fetchDecks()
+        })
+    }
+
+    const fetchDecks = () => {
         const payload = { id: USER_DETAILS.id }
         getDeckByUserId(dispatch, payload).then((response: any) => {
             // console.log(response.data)
         })
-    }, [])
-
-    useEffect(() => {
-        console.log(DECKS)
-    }, [DECKS])
+    }
 
     return <div className="h-screen w-screen flex flex-col p-8 mt-4">
         <Card className='mt-4'>
@@ -51,7 +59,7 @@ export default function Inventory() {
                             <div className='grow'></div>
                             <Button variant="contained" color='secondary' onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}>REVIEW</Button>
                             <Button variant="outlined" onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}><EditIcon /></Button>
-                            <Button variant="contained" style={{ background: 'red' }} onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}><DeleteIcon /></Button>
+                            <Button variant="contained" onClick={() => deleteSelectedDeck(deck)} style={{ background: 'red' }}><DeleteIcon /></Button>
                         </CardContent>
                     </Card>
                 ))}

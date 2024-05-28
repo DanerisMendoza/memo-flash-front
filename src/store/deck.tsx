@@ -3,6 +3,7 @@ import axiosInstance from '../api.js';
 
 // Define the type for the state
 export interface Deck {
+    id: String,
     name: String,
     description: String,
     createdAt: { type: Date },
@@ -28,7 +29,7 @@ const deckSlice = createSlice({
         SET_DECK_DIALOG: (state, action: PayloadAction<boolean>) => {
             state.DECK_DIALOG = action.payload;
         },
-        
+
         SET_DECKS: (state, action: PayloadAction<any>) => {
             state.DECKS = action.payload;
         },
@@ -50,6 +51,16 @@ export const getDeckByUserId = (dispatch: any, payload) => {
     return new Promise((resolve, reject) => {
         axiosInstance.get(`/api/getDeckByUserId/${payload.id}`).then((response) => {
             dispatch(SET_DECKS(response.data));
+            resolve(response);
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+export const deleteDeckById = (payload) => {
+    return new Promise((resolve, reject) => {
+        axiosInstance.delete(`/api/deleteDeckById/${payload.id}`).then((response) => {
             resolve(response);
         }).catch(error => {
             reject(error);
