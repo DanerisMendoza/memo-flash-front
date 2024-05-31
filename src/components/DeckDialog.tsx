@@ -34,10 +34,6 @@ export default function LoginDialog() {
         name: "",
         description: "",
     });
-    const roles = [
-        { role: 0, pages: ['Users'] },
-        { role: 1, pages: ['Deck', 'Profile'] }
-    ];
     const [errors, setErrors] = useState<any>({});
     const DialogClose = (event, reason) => {
         if (reason && reason === "backdropClick") {
@@ -175,11 +171,11 @@ export default function LoginDialog() {
                 </DialogContent>
                 <DialogActions>
                     <div className="w-full flex flex-row justify-center gap-2 pb-4">
-                        <Button variant="contained" onClick={(event) => DialogClose(event, 'buttonClick')}>
-                            Cancel
-                        </Button>
                         <Button variant="contained" onClick={submit} autoFocus>
                             Submit
+                        </Button>
+                        <Button variant="contained" onClick={(event) => DialogClose(event, 'buttonClick')}>
+                            Cancel
                         </Button>
                     </div>
                 </DialogActions>

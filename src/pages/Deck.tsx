@@ -6,6 +6,9 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { SET_DECK_DIALOG, getDeckByUserId, Deck as DeckInterface, deleteDeckById } from '../store/deck.tsx'
+import { SET_CARD_DIALOG } from '../store/card.tsx'
+import CardDialog from '../components/CardDialog.tsx';
+
 import DeckDialog from '../components/DeckDialog.tsx';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,7 +27,7 @@ export default function Inventory() {
     const deleteSelectedDeck = (deck) => {
         console.log(deck._id)
         const payload = { id: deck._id }
-        deleteDeckById(payload).then(()=>{
+        deleteDeckById(payload).then(() => {
             fetchDecks()
         })
     }
@@ -57,8 +60,8 @@ export default function Inventory() {
                                 </Typography>
                             </div>
                             <div className='grow'></div>
-                            <Button variant="contained" color='secondary' onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}>REVIEW</Button>
-                            <Button variant="outlined" onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}><EditIcon /></Button>
+                            <Button variant="contained" color='secondary' onClick={() => { }}>REVIEW</Button>
+                            <Button variant="outlined" onClick={() => dispatch(SET_CARD_DIALOG(true))}><EditIcon /></Button>
                             <Button variant="contained" onClick={() => deleteSelectedDeck(deck)} style={{ background: 'red' }}><DeleteIcon /></Button>
                         </CardContent>
                     </Card>
@@ -66,5 +69,6 @@ export default function Inventory() {
             </CardContent>
         </Card>
         <DeckDialog />
+        <CardDialog />
     </div>
 }
