@@ -1,24 +1,28 @@
 import { createSlice, PayloadAction, Reducer } from "@reduxjs/toolkit";
 import axiosInstance from '../api.js';
+import { Deck } from "@mui/icons-material";
 
 // Define the type for the state
 export interface Deck {
+    _id: String,
     id: String,
     name: String,
     description: String,
-    createdAt: { type: Date },
+    createdAt: String,
 }
 
 
 interface DeckState {
     DECK_DIALOG: boolean;
     DECKS: Deck[],
+    SELECTED_DECK: Deck
 }
 
 // initial state
 const initialState: DeckState = {
     DECK_DIALOG: false,
     DECKS: [],
+    SELECTED_DECK: { _id: '', id: '', name: '', description: '', createdAt: '' }
 };
 
 // Define the type for the reducer
@@ -29,9 +33,11 @@ const deckSlice = createSlice({
         SET_DECK_DIALOG: (state, action: PayloadAction<boolean>) => {
             state.DECK_DIALOG = action.payload;
         },
-
         SET_DECKS: (state, action: PayloadAction<any>) => {
             state.DECKS = action.payload;
+        },
+        SET_SELECTED_DECK: (state, action: PayloadAction<any>) => {
+            state.SELECTED_DECK = action.payload;
         },
     },
 });
@@ -71,5 +77,5 @@ export const deleteDeckById = (payload) => {
 
 
 // Export actions and reducer
-export const { SET_DECK_DIALOG, SET_DECKS } = deckSlice.actions;
+export const { SET_DECK_DIALOG, SET_DECKS, SET_SELECTED_DECK } = deckSlice.actions;
 export default deckSlice.reducer;

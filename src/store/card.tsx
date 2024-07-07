@@ -13,6 +13,7 @@ interface DeckState {
     CARD_DIALOG: boolean;
     CARD_DRAWER: boolean;
     CARD: Card,
+    CARDS: Card[],
 }
 
 // initial state
@@ -24,6 +25,7 @@ const initialState: DeckState = {
         front: '',
         back: '',
     },
+    CARDS: [],
 };
 
 // Define the type for the reducer
@@ -39,6 +41,9 @@ const deckSlice = createSlice({
         },
         SET_CARD: (state, action: PayloadAction<any>) => {
             state.CARD = action.payload;
+        },
+        SET_CARDS: (state, action: PayloadAction<any>) => {
+            state.CARDS = action.payload;
         },
     },
 });
@@ -57,7 +62,7 @@ export const createCard = (dispatch: any, payload) => {
 export const getCardsByDeckId = (dispatch: any, payload) => {
     return new Promise((resolve, reject) => {
         axiosInstance.get(`/api/getCardsByDeckId/${payload.id}`).then((response) => {
-            dispatch(SET_CARD(response.data));
+            dispatch(SET_CARDS(response.data));
             resolve(response);
         }).catch(error => {
             reject(error);
@@ -78,5 +83,5 @@ export const deleteCardById = (payload) => {
 
 
 // Export actions and reducer
-export const { SET_CARD_DIALOG, SET_CARD_DRAWER, SET_CARD } = deckSlice.actions;
+export const { SET_CARD_DIALOG, SET_CARD_DRAWER, SET_CARD, SET_CARDS } = deckSlice.actions;
 export default deckSlice.reducer;

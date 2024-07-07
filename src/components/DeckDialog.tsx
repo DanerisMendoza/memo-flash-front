@@ -18,12 +18,8 @@ import { USER_DETAILS } from "../store/user.tsx";
 
 export default function LoginDialog() {
     const dispatch = useDispatch();
-    const DeckDialogState = useSelector(
-        (state: RootState) => state.deckReducer.DECK_DIALOG
-    );
-    const USER_DETAILS = useSelector(
-        (state: RootState) => state.userReducer.USER_DETAILS
-    );
+    const DECK_DIALOG = useSelector((state: RootState) => state.deckReducer.DECK_DIALOG);
+    const USER_DETAILS = useSelector((state: RootState) => state.userReducer.USER_DETAILS);
 
     interface FormData {
         name: string;
@@ -134,7 +130,7 @@ export default function LoginDialog() {
     return (
         <React.Fragment >
             <Dialog
-                open={DeckDialogState}
+                open={DECK_DIALOG}
                 onClose={DialogClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"

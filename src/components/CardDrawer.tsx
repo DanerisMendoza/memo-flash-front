@@ -8,13 +8,15 @@ import { SET_CARD_DRAWER, getCardsByDeckId } from '../store/card.tsx';
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
+import Swal from "sweetalert2";
+import { createCard } from '../store/card.tsx'
+import { USER_DETAILS } from "../store/user.tsx";
 
 export default function DrawerBasic() {
     const dispatch = useDispatch();
-    const CARD_DRAWER = useSelector(
-        (state: RootState) => state.cardReducer.CARD_DRAWER
-    );
-
+    const CARD_DRAWER = useSelector((state: RootState) => state.cardReducer.CARD_DRAWER);
+    const USER_DETAILS = useSelector((state: RootState) => state.userReducer.USER_DETAILS);
+    const SELECTED_DECK = useSelector((state: RootState) => state.deckReducer.SELECTED_DECK);
     interface FormData {
         front: string;
         back: string;
@@ -27,7 +29,8 @@ export default function DrawerBasic() {
         back: "",
     });
 
-    const closeDrawer = () => (event) => {
+
+    const closeDrawer = (event, reason) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
         }
@@ -91,13 +94,35 @@ export default function DrawerBasic() {
         e.preventDefault();
         const result = validateForm();
         if (Object.keys(result).length === 0) {
-            // Proceed with form submission logic
+            const payload = {
+                deck_id: SELECTED_DECK._id,
+                front: formData.front,
+                back: formData.back,
+            };
+            createCard(dispatch, payload).then((response: any) => {
+                if (response.status === 201) {
+                    const payload = { id: SELECTED_DECK._id }
+                    getCardsByDeckId(dispatch, payload).then((response: any) => {
+                        closeDrawer(event, 'buttonClick')
+                    })
+                }
+            }).catch((error) => {
+                if (error.response.status === 401 || error.response.status === 404) {
+                    const message = error.response.data.message;
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid Username or Password!",
+                        text: message,
+                    });
+                    return;
+                }
+            });
         }
     };
 
     return (
         <React.Fragment>
-            <Drawer open={CARD_DRAWER} onClose={closeDrawer(false)} anchor='bottom' disableEnforceFocus>
+            <Drawer open={CARD_DRAWER} onClose={closeDrawer} anchor='bottom' disableEnforceFocus>
                 <form onSubmit={submit}>
                     <div className="flex flex-col gap-2 p-2">
                         <TextField

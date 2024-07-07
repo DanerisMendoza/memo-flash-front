@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from 'react-redux'
-import { SET_DECK_DIALOG, getDeckByUserId, Deck as DeckInterface, deleteDeckById } from '../store/deck.tsx'
+import { SET_DECK_DIALOG, getDeckByUserId, Deck as DeckInterface, deleteDeckById, SET_SELECTED_DECK } from '../store/deck.tsx'
 import { SET_CARD_DIALOG } from '../store/card.tsx'
 import CardDialog from '../components/CardDialog.tsx';
 
@@ -19,6 +19,7 @@ export default function Inventory() {
     const dispatch = useDispatch()
     const USER_DETAILS = useSelector((state: RootState) => state.userReducer.USER_DETAILS);
     const DECKS = useSelector((state: RootState) => state.deckReducer.DECKS);
+    const CARD_DIALOG = useSelector((state: RootState) => state.cardReducer.CARD_DIALOG);
 
     useEffect(() => {
         fetchDecks()
@@ -32,10 +33,15 @@ export default function Inventory() {
         })
     }
 
+    const openDeck = (deck) => {
+        dispatch(SET_CARD_DIALOG(true))
+        dispatch(SET_SELECTED_DECK(deck))
+    }
+
     const fetchDecks = () => {
         const payload = { id: USER_DETAILS.id }
         getDeckByUserId(dispatch, payload).then((response: any) => {
-            // console.log(response.data)
+            console.log(response.data)
         })
     }
 
@@ -48,7 +54,7 @@ export default function Inventory() {
                     <Button variant="contained" onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}>Add New Deck</Button>
                 </div>
 
-                {DECKS.map((deck: DeckInterface, index) => (
+                {DECKS.length > 0 && DECKS.map((deck: DeckInterface, index) => (
                     <Card key={index} className="mt-4">
                         <CardContent className='flex gap-2'>
                             <div>
@@ -61,7 +67,7 @@ export default function Inventory() {
                             </div>
                             <div className='grow'></div>
                             <Button variant="contained" color='secondary' onClick={() => { }}>REVIEW</Button>
-                            <Button variant="outlined" onClick={() => dispatch(SET_CARD_DIALOG(true))}><EditIcon /></Button>
+                            <Button variant="outlined" onClick={() => openDeck(deck)}><EditIcon /></Button>
                             <Button variant="contained" onClick={() => deleteSelectedDeck(deck)} style={{ background: 'red' }}><DeleteIcon /></Button>
                         </CardContent>
                     </Card>
@@ -69,6 +75,6 @@ export default function Inventory() {
             </CardContent>
         </Card>
         <DeckDialog />
-        <CardDialog />
+        {CARD_DIALOG && <CardDialog />}
     </div>
 }
