@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CardDrawer from '../components/CardDrawer.tsx';
 import Card from '@mui/material/Card';
@@ -13,12 +11,12 @@ import Typography from '@mui/material/Typography';
 
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
-import { SET_CARD_DIALOG, getCardsByDeckId, SET_CARD_DRAWER, Card as CardInterface, } from '../store/card.tsx'
+import { SET_REVIEW_DIALOG, getCardsByDeckId, SET_CARD_DRAWER, Card as CardInterface, } from '../store/card.tsx'
 
 
 export default function LoginDialog() {
     const dispatch = useDispatch();
-    const CARD_DIALOG = useSelector((state: RootState) => state.cardReducer.CARD_DIALOG);
+    const REVIEW_DIALOG = useSelector((state: RootState) => state.cardReducer.REVIEW_DIALOG);
     const SELECTED_DECK = useSelector((state: RootState) => state.deckReducer.SELECTED_DECK);
     const CARDS = useSelector((state: RootState) => state.cardReducer.CARDS);
 
@@ -26,7 +24,7 @@ export default function LoginDialog() {
         if (reason && reason === "backdropClick") {
             return;
         }
-        dispatch(SET_CARD_DIALOG(false));
+        dispatch(SET_REVIEW_DIALOG(false));
     };
 
     const add_card = async (e) => {
@@ -44,7 +42,7 @@ export default function LoginDialog() {
     return (
         <React.Fragment >
             <Dialog
-                open={CARD_DIALOG}
+                open={REVIEW_DIALOG}
                 onClose={DialogClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
@@ -71,11 +69,8 @@ export default function LoginDialog() {
                 </DialogContent>
                 <DialogActions>
                     <div className="w-full flex flex-row justify-center gap-2 pb-4">
-                        <Button variant="contained" color="secondary" autoFocus onClick={(event) => DialogClose(event, 'buttonClick')}>
-                            Start Review
-                        </Button>
                         <Button variant="contained" color="primary" onClick={add_card} autoFocus>
-                            Add Card
+                            Next Card
                         </Button>
                         <Button variant="contained" style={{ background: 'red' }} onClick={(event) => DialogClose(event, 'buttonClick')}>
                             Cancel
@@ -84,7 +79,6 @@ export default function LoginDialog() {
                 </DialogActions>
                 <CardDrawer />
             </Dialog>
-
         </React.Fragment>
     );
 }

@@ -10,6 +10,7 @@ export interface Card {
 
 
 interface DeckState {
+    REVIEW_DIALOG: boolean;
     CARD_DIALOG: boolean;
     CARD_DRAWER: boolean;
     CARD: Card,
@@ -18,6 +19,7 @@ interface DeckState {
 
 // initial state
 const initialState: DeckState = {
+    REVIEW_DIALOG: false,
     CARD_DIALOG: false,
     CARD_DRAWER: false,
     CARD: {
@@ -35,6 +37,9 @@ const deckSlice = createSlice({
     reducers: {
         SET_CARD_DIALOG: (state, action: PayloadAction<boolean>) => {
             state.CARD_DIALOG = action.payload;
+        },
+        SET_REVIEW_DIALOG: (state, action: PayloadAction<boolean>) => {
+            state.REVIEW_DIALOG = action.payload;
         },
         SET_CARD_DRAWER: (state, action: PayloadAction<boolean>) => {
             state.CARD_DRAWER = action.payload;
@@ -83,5 +88,5 @@ export const deleteCardById = (payload) => {
 
 
 // Export actions and reducer
-export const { SET_CARD_DIALOG, SET_CARD_DRAWER, SET_CARD, SET_CARDS } = deckSlice.actions;
+export const { SET_CARD_DIALOG, SET_REVIEW_DIALOG, SET_CARD_DRAWER, SET_CARD, SET_CARDS } = deckSlice.actions;
 export default deckSlice.reducer;

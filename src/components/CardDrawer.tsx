@@ -143,9 +143,14 @@ export default function DrawerBasic() {
                             onBlur={handleFieldChange}
                             helperText={errors.back}
                         />
-                        <Button type="submit" autoFocus>
-                            Submit
-                        </Button>
+                        <div className='flex gap-1 self-center'>
+                            <Button type="submit" autoFocus>
+                                Submit
+                            </Button>
+                            <Button onClick={(event) => closeDrawer(event, 'buttonClick')} autoFocus style={{ background: 'red' }}>
+                                Cancel
+                            </Button>
+                        </div>
                     </div>
                 </form>
             </Drawer>
