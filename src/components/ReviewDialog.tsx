@@ -13,6 +13,15 @@ import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
 import { SET_REVIEW_DIALOG, getCardsByDeckId, SET_CARD_DRAWER, Card as CardInterface, } from '../store/card.tsx'
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Keyboard, Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 export default function LoginDialog() {
     const dispatch = useDispatch();
@@ -38,6 +47,43 @@ export default function LoginDialog() {
         })
     }, []);
 
+    const [progress, setProgress] = React.useState(10);
+
+    React.useEffect(() => {
+        const timer = setInterval(() => {
+            setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10));
+        }, 800);
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+
+    function CircularProgressWithLabel(props) {
+        return (
+            <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress variant="determinate" {...props} />
+                <Box
+                    sx={{
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Typography variant="caption" component="div" color="text.secondary">
+                        {`${Math.round(props.value)}%`}
+                    </Typography>
+                </Box>
+            </Box>
+        );
+    }
+
+
+
 
     return (
         <React.Fragment >
@@ -52,24 +98,40 @@ export default function LoginDialog() {
                     <div className="text-center">{"CARDS"}</div>
                 </DialogTitle>
                 <DialogContent className="w-58 lg:w-96">
-                    {CARDS.length > 0 && CARDS.map((card: CardInterface, index) => (
-                        <Card key={index} className="mt-4">
-                            <CardContent className='flex gap-2'>
-                                <div>
-                                    <Typography variant="h5" component="div">
-                                        {card.front}
-                                    </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {card.back}
-                                    </Typography>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
+                    <Swiper
+                        slidesPerView={1}
+                        onSlideChange={() => console.log('slide change')}
+                        onSwiper={(swiper) => console.log(swiper)}
+                        modules={[Navigation, Pagination]}
+                        pagination={{
+                            type: 'progressbar',
+                            // progressbarOpposite: false,
+                            // horizontalClass: 'swiper-pagination-horizontal'
+                        }}
+                    >
+                        {CARDS.length > 0 && CARDS.map((card: CardInterface, index) => (
+                            <SwiperSlide>
+                                <Card key={index} className="mt-4 p-1 ">
+                                    <CircularProgressWithLabel  value={progress} />
+                                    <CardContent >
+                                            <Typography variant="h5" component="div">
+                                                Question: {card.front}
+                                            </Typography>
+                                            <Typography variant="h5" color="textSecondary">
+                                                Answer: {card.back}
+                                            </Typography>
+                                    </CardContent>
+                                </Card>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
                 </DialogContent>
                 <DialogActions>
                     <div className="w-full flex flex-row justify-center gap-2 pb-4">
                         <Button variant="contained" color="primary" onClick={add_card} autoFocus>
+                            Restart
+                        </Button>
+                        <Button variant="contained" style={{ background: 'green' }} color="primary" onClick={add_card} autoFocus>
                             Next Card
                         </Button>
                         <Button variant="contained" style={{ background: 'red' }} onClick={(event) => DialogClose(event, 'buttonClick')}>
@@ -82,3 +144,4 @@ export default function LoginDialog() {
         </React.Fragment>
     );
 }
+

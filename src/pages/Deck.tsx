@@ -21,6 +21,7 @@ export default function Inventory() {
     const USER_DETAILS = useSelector((state: RootState) => state.userReducer.USER_DETAILS);
     const DECKS = useSelector((state: RootState) => state.deckReducer.DECKS);
     const CARD_DIALOG = useSelector((state: RootState) => state.cardReducer.CARD_DIALOG);
+    const REVIEW_DIALOG = useSelector((state: RootState) => state.cardReducer.REVIEW_DIALOG);
 
     useEffect(() => {
         fetchDecks()
@@ -81,7 +82,7 @@ export default function Inventory() {
             </CardContent>
         </Card>
         <DeckDialog />
-        <ReviewDialog />
+        {REVIEW_DIALOG && <ReviewDialog />}
         {CARD_DIALOG && <CardDialog />}
     </div>
 }
