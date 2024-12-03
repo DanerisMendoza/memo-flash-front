@@ -10,6 +10,9 @@ import CardDrawer from '../components/CardDrawer.tsx';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CardHeader from '@mui/material/CardHeader';
 
 import type { RootState } from "../store/store";
 import { useSelector, useDispatch } from "react-redux";
@@ -40,6 +43,13 @@ export default function LoginDialog() {
         })
     }, []);
 
+    const editCard = (card) => {
+
+    }
+
+    const deleteCard = (card) => {
+        console.log(card)
+    }
 
     return (
         <React.Fragment >
@@ -64,6 +74,11 @@ export default function LoginDialog() {
                                     <Typography variant="body2" color="textSecondary">
                                         {card.back}
                                     </Typography>
+                                </div>
+                                <div className="grow"></div>
+                                <div className="flex">
+                                    {/* <Button variant="text" onClick={() => editCard(card)}><EditIcon /></Button> */}
+                                    <Button variant="text" color="error" onClick={() => deleteCard(card)} ><DeleteIcon /></Button>
                                 </div>
                             </CardContent>
                         </Card>

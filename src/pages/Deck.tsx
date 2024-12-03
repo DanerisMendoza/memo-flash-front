@@ -56,7 +56,7 @@ export default function Inventory() {
         <Card className='mt-4'>
             <CardContent >
                 <div className='flex items-center mb-4'>
-                    <h1>DECKS</h1>
+                    <h1>DECKS2222</h1>
                     <div className='grow'></div>
                     <Button variant="contained" onClick={() => { dispatch(SET_DECK_DIALOG(true)) }}>Add New Deck</Button>
                 </div>
