@@ -1,0 +1,5 @@
+## Run in Development
+npm run dev -- --mode development
+
+## Run in Production
+npm run dev -- --mode production
